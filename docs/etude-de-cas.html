@@ -93,11 +93,11 @@ td:first-child{color:var(--ink);font-weight:500;width:38%}
     <table>
       <thead><tr><th>Problème</th><th>Conséquence</th></tr></thead>
       <tbody>
-        <tr><td>Noter demande 3 écrans : fiche → « Write a review » → formulaire → 5 étoiles entières</td>
-            <td>On ne note pas en passant. La note arrive des jours plus tard, ou jamais.</td></tr>
+        <tr><td>Noter demande de trouver le livre, d'ouvrir sa fiche, de viser les étoiles — puis une feuille s'ouvre et il faut encore confirmer</td>
+            <td>Quatre étapes pour un geste. On ne note pas en passant, donc on ne note pas.</td></tr>
         <tr><td>La recherche rend une liste de texte, livre et éditions mélangés</td>
             <td>On cherche un livre vu en librairie et on tombe sur une édition de 1994.</td></tr>
-        <tr><td>Aucune trace datée : une note écrase la précédente</td>
+        <tr><td>Aucune date : une note écrase la précédente, et le seul repère est un « 08 NOV » sans année</td>
             <td>Impossible de dire « lu en novembre », ni de relire sans perdre l'ancienne note.</td></tr>
       </tbody>
     </table>
@@ -172,7 +172,7 @@ td:first-child{color:var(--ink);font-weight:500;width:38%}
         <h3>La notation — deux gestes, une demi-étoile</h3>
         <table>
           <tbody>
-            <tr><td>5 étoiles entières, dans un formulaire séparé de la fiche.</td>
+            <tr><td>Les étoiles sont sur la fiche, mais les toucher ouvre une feuille à valider, et l'échelle reste entière.</td>
                 <td>Une feuille modale par-dessus la fiche : le livre reste visible.</td></tr>
             <tr><td>Impossible de mettre 4,5.</td>
                 <td>La moitié gauche d'une étoile donne la demi-note ; le chiffre géant lève l'ambiguïté.</td></tr>
@@ -190,8 +190,10 @@ td:first-child{color:var(--ink);font-weight:500;width:38%}
         <h3>Le journal — la trace datée</h3>
         <table>
           <tbody>
-            <tr><td>La note remplace la précédente, sans date.</td>
-                <td>Chaque note crée une entrée datée : relire crée une deuxième entrée.</td></tr>
+            <tr><td>La note remplace la précédente : aucune trace de ce qu'on a lu avant.</td>
+                <td>Chaque note crée une entrée, et relire en crée une deuxième.</td></tr>
+            <tr><td>Des dates réduites à un jour et un mois (« 08 NOV »), sans année ni jour de semaine.</td>
+                <td>Un en-tête de mois (« novembre 2026 »), le jour en gros et le jour de la semaine en clair.</td></tr>
             <tr><td>Aucun état hors ligne : la note est perdue sans réseau.</td>
                 <td>Bandeau « Une note attend le réseau » et statut par entrée.</td></tr>
             <tr><td>Thème imposé.</td>

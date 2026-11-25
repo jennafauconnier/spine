@@ -14,9 +14,9 @@ Letterboxd la mécanique (demi-étoiles, journal daté) et rien de son habillage
 
 | Problème Goodreads | Ce que ça produit |
 |---|---|
-| Noter demande 3 écrans : fiche → « Write a review » → formulaire web → 5 étoiles entières | On ne note pas « en passant ». La note arrive des jours plus tard, ou jamais. |
+| Noter demande de trouver le livre, d'ouvrir sa fiche, de viser les étoiles — puis une feuille s'ouvre et il faut encore confirmer | Quatre étapes pour un geste : on ne note pas « en passant », donc on ne note pas. |
 | La recherche rend une liste de texte, où le livre et ses éditions se mélangent | On cherche un livre qu'on a vu en librairie et on tombe sur l'édition allemande de 1994. |
-| Aucune trace datée : une note écrase la précédente | Impossible de dire « j'ai lu ça en novembre », de relire un livre et de garder les deux notes. |
+| Aucune date : une note écrase la précédente, et le seul repère est un « 08 NOV » sans année ni jour de semaine | Impossible de dire « j'ai lu ça en novembre », de relire un livre et de garder les deux notes. |
 | L'interface date : beige, petites graisses, fiches encombrées | L'information utile est noyée dans les métadonnées. |
 
 Trois directions artistiques ont été produites puis **rejetées** (« ça ne change pas assez de
@@ -63,7 +63,7 @@ montre le résultat final ; `ITERATIONS.md` garde la trace des impasses.
 
 | Problème | Décision | Effet |
 |---|---|---|
-| 5 étoiles entières, dans un formulaire, séparé de la fiche. | Une **feuille modale** par-dessus la fiche : 5 étoiles de 32 pt, le chiffre en 38 pt, deux gestes. | Le livre reste visible pendant qu'on le note. |
+| Les étoiles sont sur la fiche, mais les toucher ouvre une feuille qu'il faut encore valider, et l'échelle reste entière. | Une **feuille modale** par-dessus la fiche : 5 étoiles de 32 pt, le chiffre en 38 pt, deux gestes. | Le livre reste visible pendant qu'on le note. |
 | Impossible de mettre 4,5. | La moitié gauche d'une étoile donne la demi-note, et le chiffre géant lève l'ambiguïté. | La précision sans explication : on lit « 4,5 / 5 » en gros. |
 | Un avis obligatoire, un formulaire, des cases. | L'avis est un champ facultatif ; spoiler, privé, statut et date sont repliés sous « Plus d'options ». | Le parcours par défaut tient en un geste et demi. |
 
@@ -73,7 +73,8 @@ montre le résultat final ; `ITERATIONS.md` garde la trace des impasses.
 
 | Problème | Décision | Effet |
 |---|---|---|
-| La note remplace la précédente, sans date. | Chaque note crée **une entrée datée** (jour + mois), avec la note, l'avis et le statut. | Relire un livre crée une deuxième entrée au lieu d'écraser la première. |
+| La note remplace la précédente : aucune trace de ce qu'on a lu avant. | Chaque note crée **une entrée**, avec la note, l'avis et le statut. | Relire un livre crée une deuxième entrée au lieu d'écraser la première. |
+| Des dates réduites à un jour et un mois (« 08 NOV »), sans année ni jour de semaine. | Un **en-tête de mois** (« novembre 2026 »), le jour en gros et le jour de la semaine en clair ; la date complète reste dans le libellé vocal. | On date une lecture sans compter : « 25 — mer. » sous « novembre 2026 ». |
 | Aucun état hors ligne : on perd sa note en cas de réseau absent. | Bandeau « Une note attend le réseau », et un statut par entrée. | On note dans le métro, la note part plus tard. |
 | Le thème est imposé. | Bascule clair/sombre en icône, sur l'accueil et dans le Journal. | Un seul bouton, deux thèmes, mêmes contrastes. |
 
