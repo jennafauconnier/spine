@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
 <style>
-:root{--page:#0A0A0B;--chrome:#F1EFE9;--dim:#6E6E74;--line:#232326}
+:root{--page:#0A0A0B;--chrome:#F1EFE9;--dim:var(--ink3);--line:#232326}
 *{box-sizing:border-box;-webkit-font-smoothing:antialiased}
 html,body{margin:0}
 body{background:var(--page);color:var(--chrome);font:14px/1.5 Inter,system-ui,sans-serif}
@@ -44,20 +44,22 @@ body{background:var(--page);color:var(--chrome);font:14px/1.5 Inter,system-ui,sa
 .rail::-webkit-scrollbar-thumb{background:#2B2B2E;border-radius:8px}
 
 /* ---------- téléphone ---------- */
-.phone{flex:0 0 300px;width:300px;height:650px;scroll-snap-align:start;background:#fff;color:#0B0B0C;
+.phone{--bg:#FFFFFF;--surf:#F4F4F2;--ink:#0B0B0C;--ink2:#5A5A60;--ink3:#6E6E74;--line:#EDEDEA;--line2:#DCDCD7;
+  --acc:#1B4DFF;--onacc:#FFFFFF;--hero:#1B4DFF;--onhero:#FFFFFF;--accweak:#F3F5FF;--accline:#DDE3FF;--starempty:#E4E4DF;
+  flex:0 0 300px;width:300px;height:650px;scroll-snap-align:start;background:var(--bg);color:var(--ink);
   border:7px solid #131316;border-radius:34px;overflow:hidden;position:relative;
   box-shadow:0 22px 44px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.05);
   font-family:Inter,system-ui,sans-serif}
 .phone::after{content:attr(data-cap);position:absolute;top:0;left:0;z-index:9;padding:5px 9px 4px;
   border-radius:0 0 7px 0;font:600 7.5px/1 Inter;letter-spacing:.1em;text-transform:uppercase;
-  color:#0B0B0C;background:rgba(255,255,255,.9)}
+  color:var(--ink);background:rgba(255,255,255,.9)}
 .stat{height:22px;display:flex;align-items:center;justify-content:space-between;padding:0 14px 0 70px;
-  font:600 8.5px/1 Inter;color:#0B0B0C;opacity:.45;background:#fff;position:relative;z-index:8}
-.sc{height:calc(100% - 22px);display:flex;flex-direction:column;overflow:hidden;position:relative;background:#fff}
+  font:600 8.5px/1 Inter;color:var(--ink);opacity:.45;background:var(--bg);position:relative;z-index:8}
+.sc{height:calc(100% - 22px);display:flex;flex-direction:column;overflow:hidden;position:relative;background:var(--bg)}
 
 /* ---------- primitives ---------- */
 .cv{position:relative;overflow:hidden;border-radius:6px;display:flex;flex-direction:column;justify-content:flex-end;
-  padding:7px 6px;color:#fff;line-height:1.1;background:#ddd;flex:0 0 auto}
+  padding:7px 6px;color:var(--onacc);line-height:1.1;background:#ddd;flex:0 0 auto}
 .cv b{font:700 10px/1.05 'Space Grotesk',sans-serif;letter-spacing:-.01em}
 .cv i{font:500 6.5px/1.2 Inter;font-style:normal;opacity:.8;margin-top:3px}
 .g1{background:linear-gradient(155deg,#2F4BE0,#101A55)}
@@ -70,21 +72,21 @@ body{background:var(--page);color:var(--chrome);font:14px/1.5 Inter,system-ui,sa
 
 .h1{font:700 22px/1.1 'Space Grotesk';letter-spacing:-.02em}
 .h2{font:700 15px/1.2 'Space Grotesk';letter-spacing:-.01em}
-.lbl{font:600 9px/1 Inter;letter-spacing:.12em;text-transform:uppercase;color:#6E6E74}
-.mut{color:#5A5A60}
+.lbl{font:600 9px/1 Inter;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3)}
+.mut{color:var(--ink2)}
 .btn{display:flex;align-items:center;justify-content:center;height:46px;border-radius:12px;
   font:600 13px/1 Inter;letter-spacing:-.01em;border:0}
-.btn.primary{background:#1B4DFF;color:#fff}
-.btn.outline{border:1px solid #DCDCD7;color:#0B0B0C;background:#fff}
-.tabbar{display:flex;border-top:1px solid #EDEDEA;background:#fff;padding:6px 0 8px;margin-top:auto}
-.tabbar div{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;font:500 9px/1 Inter;color:#6E6E74}
-.tabbar div.on{color:#1B4DFF}
+.btn.primary{background:var(--acc);color:var(--onacc)}
+.btn.outline{border:1px solid var(--line2);color:var(--ink);background:var(--bg)}
+.tabbar{display:flex;border-top:1px solid var(--line);background:var(--bg);padding:6px 0 8px;margin-top:auto}
+.tabbar div{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;font:500 9px/1 Inter;color:var(--ink3)}
+.tabbar div.on{color:var(--acc)}
 .tabbar svg{display:block}
 
 .stars{display:inline-flex;gap:2px;font-size:14px;line-height:1}
 .stars .s{position:relative;display:block}
-.stars .s>span{color:#E4E4DF}
-.stars .s>b{position:absolute;left:0;top:0;overflow:hidden;white-space:nowrap;color:#1B4DFF;font-weight:400}
+.stars .s>span{color:var(--starempty)}
+.stars .s>b{position:absolute;left:0;top:0;overflow:hidden;white-space:nowrap;color:var(--acc);font-weight:400}
 .stars .s[data-f="0"]>b{width:0}
 .stars .s[data-f=".5"]>b{width:50%}
 .stars .s[data-f="1"]>b{width:100%}
@@ -92,89 +94,101 @@ body{background:var(--page);color:var(--chrome);font:14px/1.5 Inter,system-ui,sa
 /* ---------- F1 ---------- */
 .head{display:flex;justify-content:space-between;align-items:center;padding:2px 16px 10px}
 .wordmark{font:700 17px/1 'Space Grotesk';letter-spacing:-.02em}
-.avatar{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#1B4DFF,#7C4DFF)}
-.hero{margin:0 16px;background:#1B4DFF;color:#fff;border-radius:16px;padding:14px;display:flex;gap:12px}
+.avatar{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--acc),#7C4DFF)}
+.hero{margin:0 16px;background:var(--hero);color:var(--onacc);border-radius:16px;padding:14px;display:flex;gap:12px}
 .hero .cv{width:56px;height:84px;box-shadow:0 6px 14px rgba(0,0,0,.28)}
 .hero .t{font:700 15px/1.15 'Space Grotesk';margin-top:2px}
 .hero .a{font:500 10.5px/1.3 Inter;opacity:.85}
 .hero .bar{height:4px;border-radius:2px;background:rgba(255,255,255,.28);margin-top:9px;position:relative;overflow:hidden}
-.hero .bar i{position:absolute;inset:0 54% 0 0;background:#fff;border-radius:2px}
+.hero .bar i{position:absolute;inset:0 54% 0 0;background:var(--bg);border-radius:2px}
 .hero .go{display:flex;align-items:center;gap:5px;font:600 10.5px/1 Inter;margin-top:8px}
 .sect{display:flex;justify-content:space-between;align-items:baseline;padding:16px 16px 8px}
 .sect .l{font:700 13px/1 'Space Grotesk'}
-.sect .r{font:600 10px/1 Inter;color:#1B4DFF}
+.sect .r{font:600 10px/1 Inter;color:var(--acc)}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 12px;padding:0 16px}
 .grid .cv{height:170px;width:100%}
 .grid .ti{font:600 11px/1.25 Inter;margin-top:6px}
-.grid .au{font:400 9.5px/1.3 Inter;color:#5A5A60;margin-top:1px}
-.grid .why{font:400 9px/1.3 Inter;color:#6E6E74;margin-top:4px}
-.searchbar{margin:10px 16px 0;height:40px;border-radius:12px;background:#F4F4F2;display:flex;align-items:center;gap:8px;padding:0 11px;color:#6E6E74;font:400 11px/1 Inter}
-.searchbar .s2{margin-left:auto;color:#0B0B0C;font-weight:600;font-size:10px}
+.grid .au{font:400 9.5px/1.3 Inter;color:var(--ink2);margin-top:1px}
+.grid .why{font:400 9px/1.3 Inter;color:var(--ink3);margin-top:4px}
+.searchbar{margin:10px 16px 0;height:40px;border-radius:12px;background:var(--surf);display:flex;align-items:center;gap:8px;padding:0 11px;color:var(--ink3);font:400 11px/1 Inter}
+.searchbar .s2{margin-left:auto;color:var(--ink);font-weight:600;font-size:10px}
 
 /* ---------- F2 ---------- */
-.field{margin:0 16px;height:44px;border-radius:12px;background:#F4F4F2;display:flex;align-items:center;gap:8px;padding:0 12px}
-.field .q{flex:1;font:400 12px/1 Inter;color:#0B0B0C}
+.field{margin:0 16px;height:44px;border-radius:12px;background:var(--surf);display:flex;align-items:center;gap:8px;padding:0 12px}
+.field .q{flex:1;font:400 12px/1 Inter;color:var(--ink)}
 .field .q em{color:#7A7A80;font-style:normal}
 .chips{display:flex;gap:6px;padding:10px 16px 0;overflow:hidden}
-.chip{font:500 10px/1 Inter;border:1px solid #E2E2DE;border-radius:999px;padding:7px 10px;color:#3A3A40;white-space:nowrap}
-.chip.on{background:#0B0B0C;color:#fff;border-color:#0B0B0C}
-.rrow{display:flex;gap:11px;align-items:center;padding:10px 16px;border-bottom:1px solid #F0F0EC}
+.chip{font:500 10px/1 Inter;border:1px solid var(--line);border-radius:999px;padding:7px 10px;color:#3A3A40;white-space:nowrap}
+.chip.on{background:var(--ink);color:var(--onacc);border-color:var(--ink)}
+.rrow{display:flex;gap:11px;align-items:center;padding:10px 16px;border-bottom:1px solid var(--line)}
 .rrow .cv{width:42px;height:62px;border-radius:5px;padding:4px;align-items:center;justify-content:center}
 .rrow .cv b{font-size:17px;line-height:1;opacity:.95}.rrow .cv i{display:none}
 .rrow .ti{font:600 12px/1.2 Inter}
-.rrow .au{font:400 9.5px/1.3 Inter;color:#5A5A60;margin-top:2px}
+.rrow .au{font:400 9.5px/1.3 Inter;color:var(--ink2);margin-top:2px}
 .rrow .mt{display:flex;align-items:center;gap:5px;margin-top:4px}
-.rrow .mt span{font:600 9px/1 Inter;color:#5A5A60}
-.rrow .add{margin-left:auto;font:600 10px/1 Inter;color:#1B4DFF;border:1px solid #DDE3FF;border-radius:999px;padding:7px 10px;background:#F3F5FF}
-.rrow .done{margin-left:auto;font:600 9px/1 Inter;color:#5A5A60}
+.rrow .mt span{font:600 9px/1 Inter;color:var(--ink2)}
+.rrow .add{margin-left:auto;font:600 10px/1 Inter;color:var(--acc);border:1px solid var(--accline);border-radius:999px;padding:7px 10px;background:var(--accweak)}
+.rrow .done{margin-left:auto;font:600 9px/1 Inter;color:var(--ink2)}
 
 /* ---------- F3 ---------- */
-.back{display:flex;align-items:center;justify-content:space-between;padding:2px 16px 0;font:600 11px/1 Inter;color:#1B4DFF}
+.back{display:flex;align-items:center;justify-content:space-between;padding:2px 16px 0;font:600 11px/1 Inter;color:var(--acc)}
 .cover{width:132px;height:198px;margin:10px auto 0;border-radius:8px;box-shadow:0 12px 24px -10px rgba(0,0,0,.45)}
 .ft{font:700 21px/1.15 'Space Grotesk';text-align:center;margin:14px 22px 3px;letter-spacing:-.015em}
-.fa{text-align:center;font:400 12px/1.3 Inter;color:#5A5A60}
-.fmeta{text-align:center;font:400 10px/1.4 Inter;color:#6E6E74;margin-top:8px}
-.crate{display:flex;align-items:center;gap:8px;padding:14px 16px;border-top:1px solid #EDEDEA;border-bottom:1px solid #EDEDEA;margin-top:14px}
+.fa{text-align:center;font:400 12px/1.3 Inter;color:var(--ink2)}
+.fmeta{text-align:center;font:400 10px/1.4 Inter;color:var(--ink3);margin-top:8px}
+.crate{display:flex;align-items:center;gap:8px;padding:14px 16px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-top:14px}
 .crate b{font:700 15px/1 'Space Grotesk'}
-.crate span{font:400 9.5px/1.3 Inter;color:#6E6E74}
+.crate span{font:400 9.5px/1.3 Inter;color:var(--ink3)}
 .quote{padding:14px 18px 0;font:400 11.5px/1.55 Inter;color:#3A3A40}
-.quote em{color:#6E6E74;font-style:normal;font-size:9.5px;display:block;margin-top:5px}
-.cta{position:absolute;left:0;right:0;bottom:0;padding:10px 16px 12px;background:#fff;border-top:1px solid #EDEDEA;display:flex;gap:8px}
+.quote em{color:var(--ink3);font-style:normal;font-size:9.5px;display:block;margin-top:5px}
+.cta{position:absolute;left:0;right:0;bottom:0;padding:10px 16px 12px;background:var(--bg);border-top:1px solid var(--line);display:flex;gap:8px}
 .cta .btn.primary{flex:1}
-.cta .plus{width:46px;height:46px;border-radius:12px;border:1px solid #DCDCD7;display:flex;align-items:center;justify-content:center;font-size:18px;color:#0B0B0C;background:#fff}
+.cta .plus{width:46px;height:46px;border-radius:12px;border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--ink);background:var(--bg)}
 
 /* ---------- F4 ---------- */
-.dim{position:absolute;inset:0;background:#0B0B0C;opacity:.35}
-.sheet{position:absolute;left:0;right:0;bottom:0;top:130px;background:#fff;border-radius:20px 20px 0 0;padding:0 16px 14px;display:flex;flex-direction:column}
-.grab{width:36px;height:4px;border-radius:2px;background:#DCDCD7;margin:8px auto 12px}
+.dim{position:absolute;inset:0;background:#000;opacity:.42}
+.sheet{position:absolute;left:0;right:0;bottom:0;top:130px;background:var(--bg);border-radius:20px 20px 0 0;padding:0 16px 14px;display:flex;flex-direction:column}
+.grab{width:36px;height:4px;border-radius:2px;background:var(--line2);margin:8px auto 12px}
 .sheet .bt{display:flex;gap:10px;align-items:center}
 .sheet .bt .cv{width:34px;height:51px;border-radius:4px;padding:3px}
 .sheet .bt .cv b{font-size:5px}
 .sheet .num{font:700 40px/1 'Space Grotesk';letter-spacing:-.03em}
-.sheet .num small{font:500 13px/1 Inter;color:#6E6E74;margin-left:3px;letter-spacing:0}
+.sheet .num small{font:500 13px/1 Inter;color:var(--ink3);margin-left:3px;letter-spacing:0}
 .sheet .stars{font-size:32px;gap:6px;margin-top:2px}
-.sheet .ta{margin-top:14px;border:1px solid #E2E2DE;border-radius:12px;padding:10px 11px;height:62px;
+.sheet .ta{margin-top:14px;border:1px solid var(--line);border-radius:12px;padding:10px 11px;height:62px;
   font:400 11px/1.45 Inter;color:#7A7A80}
 .sheet .opt{display:flex;justify-content:space-between;align-items:center;margin-top:12px;
   font:500 11.5px/1 Inter;color:#3A3A40}
-.sheet .opt .r{display:flex;align-items:center;gap:7px;color:#6E6E74;font-size:10px}
+.sheet .opt .r{display:flex;align-items:center;gap:7px;color:var(--ink3);font-size:10px}
 .sheet .acts{display:flex;gap:8px;margin-top:auto}
 .sheet .acts .btn{flex:1}
 .sheet .acts .btn.outline{flex:0 0 96px}
 
 /* ---------- F5 ---------- */
 .jhead{display:flex;justify-content:space-between;align-items:baseline;padding:2px 16px 12px}
-.jday{display:grid;grid-template-columns:42px 1fr;gap:11px;padding:12px 16px;border-bottom:1px solid #F0F0EC}
-.jday .d{font:600 8.5px/1.35 Inter;letter-spacing:.08em;text-transform:uppercase;color:#6E6E74}
+.jday{display:grid;grid-template-columns:36px minmax(0,1fr);gap:11px;padding:12px 16px;border-bottom:1px solid var(--line)}
+.jday .d{font:600 8.5px/1.35 Inter;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)}
 .jday .row{display:flex;gap:9px}
+.jday .row>div:last-child{min-width:0}
+.jday .rv{overflow-wrap:anywhere;font-size:9.5px}
 .jday .cv{width:32px;height:48px;border-radius:4px;padding:3px}
 .jday .cv b{font-size:5px}.jday .cv i{display:none}
 .jday .ti{font:600 11.5px/1.2 Inter}
 .jday .stars{display:flex;width:max-content;margin:3px 0 2px}
-.jday .rv{font:400 9.5px/1.45 Inter;color:#5A5A60;margin-top:3px}
-.jday .tg{display:inline-flex;align-items:center;gap:4px;font:600 8px/1 Inter;letter-spacing:.04em;color:#1B4DFF;margin-top:4px;text-transform:uppercase}
-.pending{margin:10px 16px 0;border:1px solid #DDE3FF;background:#F3F5FF;border-radius:10px;padding:8px 10px;
-  font:500 9.5px/1.35 Inter;color:#1B4DFF;display:flex;gap:6px;align-items:center}
+.jday .rv{font:400 9.5px/1.45 Inter;color:var(--ink2);margin-top:3px}
+.jday .tg{display:inline-flex;align-items:center;gap:4px;font:600 8px/1 Inter;letter-spacing:.04em;color:var(--acc);margin-top:4px;text-transform:uppercase}
+.pending{margin:10px 16px 0;border:1px solid var(--accline);background:var(--accweak);border-radius:10px;padding:8px 10px;
+  font:500 9.5px/1.35 Inter;color:var(--acc);display:flex;gap:6px;align-items:center}
+
+body[data-theme="dark"] .phone{--bg:#101013;--surf:#1A1A1E;--ink:#F3F1EC;--ink2:#A9A9B0;--ink3:#8E8E96;
+  --line:#26262B;--line2:#34343A;--acc:#7E97FF;--onacc:#0B0B0C;--hero:#2233C9;--onhero:#FFFFFF;
+  --accweak:#171C33;--accline:#2A3560;--starempty:#3A3A42;
+  box-shadow:0 22px 44px rgba(0,0,0,.75),0 0 0 1px rgba(255,255,255,.07)}
+body[data-theme="dark"] .phone::after{background:rgba(16,16,19,.9);color:#F3F1EC}
+body[data-theme="dark"] .stat{background:transparent}
+.toggle{appearance:none;border:1px solid var(--line);background:#131315;color:#C9C5BC;font:500 11px/1 Inter;
+  padding:8px 12px;border-radius:999px;cursor:pointer;margin-left:12px}
+.toggle:hover{border-color:#3a3a3e}
 </style>
 </head>
 <body>
@@ -182,6 +196,7 @@ body{background:var(--page);color:var(--chrome);font:14px/1.5 Inter,system-ui,sa
 <div class="top">
   <div class="row">
     <div class="brand">Spine<span>direction F · « Clair »</span></div>
+    <button class="toggle" id="theme">Thème sombre</button>
   </div>
   <div class="note">Ni tranches, ni gestes secrets : les 5 écrans du parcours, en composants standards. À juger sur la lisibilité, pas sur l'effet. <b>Les contrastes sont mesurés</b> (cobalt 5,91:1 sur blanc, blanc 5,91:1 sur cobalt).</div>
 </div>
@@ -197,7 +212,7 @@ body{background:var(--page);color:var(--chrome);font:14px/1.5 Inter,system-ui,sa
       <li>Noter = toucher 1 à 5 étoiles puis « Enregistrer ». Le chiffre s'affiche en gros à côté, donc la demi-étoile s'apprend toute seule.</li>
       <li>Les options rares (spoiler, privé, date, relecture) sont repliées sous « Plus d'options » : elles ne polluent pas le geste principal.</li>
     </ul>
-    <div class="sw"><i style="background:#fff"></i><i style="background:#F4F4F2"></i><i style="background:#0B0B0C"></i><i style="background:#5A5A60"></i><i style="background:#1B4DFF"></i></div>
+    <div class="sw"><i style="background:#fff"></i><i style="background:var(--surf)"></i><i style="background:var(--ink)"></i><i style="background:var(--ink2)"></i><i style="background:var(--acc)"></i></div>
     <div class="tok">Space Grotesk 700 (titres)<br>Inter 400/600 (interface)<br>blanc · encre #0B0B0C · cobalt #1B4DFF<br>marges 16 · rayons 12 · cartes sans ombre</div>
   </div>
 
@@ -226,13 +241,13 @@ body{background:var(--page);color:var(--chrome);font:14px/1.5 Inter,system-ui,sa
               <div class="cv g5"><b>Le Nom du Vent</b><i>P. Rothfuss</i></div>
               <div class="ti">Le Nom du Vent</div>
               <div class="au">Patrick Rothfuss</div>
-              <div class="why">Parce que vous avez aimé <b style="font-weight:600;color:#5A5A60">Dune</b></div>
+              <div class="why">Parce que vous avez aimé <b style="font-weight:600;color:var(--ink2)">Dune</b></div>
             </div>
             <div>
               <div class="cv g3"><b>Siddhartha</b><i>H. Hesse</i></div>
               <div class="ti">Siddhartha</div>
               <div class="au">Hermann Hesse</div>
-              <div class="why">Parce que vous avez aimé <b style="font-weight:600;color:#5A5A60">L'Étranger</b></div>
+              <div class="why">Parce que vous avez aimé <b style="font-weight:600;color:var(--ink2)">L'Étranger</b></div>
             </div>
           </div>
           <div class="sect" style="padding-top:14px"><span class="l">À lire ensuite</span><span class="r">3 livres</span></div>
@@ -240,7 +255,7 @@ body{background:var(--page);color:var(--chrome);font:14px/1.5 Inter,system-ui,sa
             <div class="cv g2" style="width:54px;height:80px;padding:5px"><b style="font-size:7px">Les Furtifs</b></div>
             <div class="cv g6" style="width:54px;height:80px;padding:5px"><b style="font-size:7px">Dune</b></div>
             <div class="cv g7" style="width:54px;height:80px;padding:5px"><b style="font-size:7px">Sisyphe</b></div>
-            <div style="width:54px;height:80px;border:1px dashed #DCDCD7;border-radius:6px;display:flex;align-items:center;justify-content:center;font:500 10px/1 Inter;color:#6E6E74">+1</div>
+            <div style="width:54px;height:80px;border:1px dashed var(--line2);border-radius:6px;display:flex;align-items:center;justify-content:center;font:500 10px/1 Inter;color:var(--ink3)">+1</div>
           </div>
           <div class="tabbar">
             <div class="on"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10.5L12 4l8 6.5V20a1 1 0 01-1 1h-4v-6H9v6H5a1 1 0 01-1-1z"/></svg>Découvrir</div>
@@ -255,9 +270,9 @@ body{background:var(--page);color:var(--chrome);font:14px/1.5 Inter,system-ui,sa
         <div class="stat"><i>9:41</i><i>▮▮▮ ··· ▮</i></div>
         <div class="sc">
           <div class="head"><span class="wordmark" style="font-size:15px">Chercher</span>
-            <span style="font:600 10px/1 Inter;color:#0B0B0C;border:1px solid #DCDCD7;border-radius:999px;padding:7px 10px">Scanner</span></div>
+            <span style="font:600 10px/1 Inter;color:var(--ink);border:1px solid var(--line2);border-radius:999px;padding:7px 10px">Scanner</span></div>
           <div class="field">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6E6E74" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4.5-4.5"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--ink3)" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4.5-4.5"/></svg>
             <span class="q">le nom du vent</span>
             <span style="font-size:13px;color:#7A7A80">✕</span>
           </div>
@@ -280,7 +295,7 @@ body{background:var(--page);color:var(--chrome);font:14px/1.5 Inter,system-ui,sa
             <div><div class="ti">La Route</div><div class="au">Cormac McCarthy · 2006</div>
               <div class="mt"><span class="stars" data-v="4" style="font-size:9px"></span><span>4,0</span></div></div>
             <span class="done">Déjà lu</span></div>
-          <div style="padding:12px 16px 0;font:400 9.5px/1.4 Inter;color:#6E6E74">Rien ne correspond ? Scannez le code-barres du livre.</div>
+          <div style="padding:12px 16px 0;font:400 9.5px/1.4 Inter;color:var(--ink3)">Rien ne correspond ? Scannez le code-barres du livre.</div>
           <div class="tabbar">
             <div><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10.5L12 4l8 6.5V20a1 1 0 01-1 1h-4v-6H9v6H5a1 1 0 01-1-1z"/></svg>Découvrir</div>
             <div class="on"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4.5-4.5"/></svg>Chercher</div>
@@ -315,7 +330,7 @@ body{background:var(--page);color:var(--chrome);font:14px/1.5 Inter,system-ui,sa
       <div class="phone" data-cap="4 · Noter">
         <div class="stat"><i>9:41</i><i>▮▮▮ ··· ▮</i></div>
         <div class="sc">
-          <div style="position:absolute;inset:0;background:#fff"></div>
+          <div style="position:absolute;inset:0;background:var(--bg)"></div>
           <div class="cover cv g1" style="position:absolute;left:84px;top:26px;width:132px;height:198px"><b style="font-size:14px">Le Nom<br>du Vent</b><i style="font-size:8px">Patrick Rothfuss</i></div>
           <div class="dim"></div>
           <div class="sheet">
@@ -323,18 +338,18 @@ body{background:var(--page);color:var(--chrome);font:14px/1.5 Inter,system-ui,sa
             <div class="bt">
               <div class="cv g1"><b>N.</b></div>
               <div style="flex:1"><div style="font:600 12px/1.2 Inter">Le Nom du Vent</div>
-                <div style="font:400 10px/1.3 Inter;color:#5A5A60">Patrick Rothfuss</div></div>
+                <div style="font:400 10px/1.3 Inter;color:var(--ink2)">Patrick Rothfuss</div></div>
               <div class="num">4,5<small>/5</small></div>
             </div>
             <div style="display:flex;align-items:center;gap:10px;margin-top:14px">
               <span class="stars" data-v="4.5" style="font-size:32px;gap:7px"></span>
             </div>
-            <div style="font:400 9.5px/1.4 Inter;color:#6E6E74;margin-top:7px">Touchez la moitié gauche d'une étoile pour une demi-note.</div>
+            <div style="font:400 9.5px/1.4 Inter;color:var(--ink3);margin-top:7px">Touchez la moitié gauche d'une étoile pour une demi-note.</div>
             <div class="ta">Ajouter un avis (facultatif)</div>
             <div class="opt"><span>Plus d'options</span><span class="r">spoiler · privé · date ›</span></div>
             <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;
-                 padding-top:12px;border-top:1px solid #F0F0EC;font:500 10px/1 Inter;color:#5A5A60">
-              <span>Lu le 12 novembre 2024</span><span style="color:#1B4DFF;font-weight:600">Modifier</span>
+                 padding-top:12px;border-top:1px solid #F0F0EC;font:500 10px/1 Inter;color:var(--ink2)">
+              <span>Lu le 12 novembre 2024</span><span style="color:var(--acc);font-weight:600">Modifier</span>
             </div>
             <div class="acts">
               <div class="btn outline">Annuler</div>
@@ -349,7 +364,7 @@ body{background:var(--page);color:var(--chrome);font:14px/1.5 Inter,system-ui,sa
         <div class="stat"><i>9:41</i><i>▮▮▮ ··· ▮</i></div>
         <div class="sc">
           <div class="jhead"><span class="h1" style="font-size:19px">Journal</span>
-            <span style="font:600 10px/1 Inter;color:#1B4DFF">Novembre ›</span></div>
+            <span style="font:600 10px/1 Inter;color:var(--acc)">Novembre ›</span></div>
           <div class="pending">
             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
             Une note attend le réseau. Elle partira toute seule.
@@ -358,7 +373,7 @@ body{background:var(--page);color:var(--chrome);font:14px/1.5 Inter,system-ui,sa
             <div class="row"><div class="cv g1"><b>N.</b></div>
               <div><div class="ti">Le Nom du Vent</div>
                 <span class="stars" data-v="4.5" style="font-size:10px"></span>
-                <div class="rv">« Un livre qu'on referme lentement. »</div>
+                <div class="rv">« Un livre qu'on referme à regret. »</div>
                 <span class="tg">Lu · 1re lecture</span></div></div></div>
           <div class="jday"><div class="d">08<br>NOV</div>
             <div class="row"><div class="cv g6"><b>LR</b></div>
@@ -368,7 +383,7 @@ body{background:var(--page);color:var(--chrome);font:14px/1.5 Inter,system-ui,sa
           <div class="jday"><div class="d">02<br>NOV</div>
             <div class="row"><div class="cv g3"><b>S.</b></div>
               <div><div class="ti">Siddhartha</div>
-                <span class="tg" style="color:#5A5A60">Abandonné p. 82</span>
+                <span class="tg" style="color:var(--ink2)">Abandonné p. 82</span>
                 <div class="rv">Repris plus tard, peut-être.</div></div></div></div>
           <div class="tabbar">
             <div><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10.5L12 4l8 6.5V20a1 1 0 01-1 1h-4v-6H9v6H5a1 1 0 01-1-1z"/></svg>Découvrir</div>
@@ -396,6 +411,12 @@ body{background:var(--page);color:var(--chrome);font:14px/1.5 Inter,system-ui,sa
     btn.addEventListener('click', function(){
       btn.closest('.railwrap').querySelector('.rail').scrollBy({left: parseInt(btn.dataset.scroll,10)*320, behavior:'smooth'});
     });
+  });
+  var b = document.getElementById('theme');
+  b.addEventListener('click', function(){
+    var dark = document.body.getAttribute('data-theme') === 'dark';
+    document.body.setAttribute('data-theme', dark ? 'light' : 'dark');
+    b.textContent = dark ? 'Thème sombre' : 'Thème clair';
   });
 })();
 </script>

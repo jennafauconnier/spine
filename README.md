@@ -19,7 +19,7 @@ par quel agent/modèle, pour quel coût) est journalisée dans [ITERATIONS.md](I
 | Phase | Contenu | État |
 |---|---|---|
 | 0 — Cadrage & propositions | brief PM, stories PO, plan technique, 3 directions UI + critique | **livré** (voir `docs/`) |
-| 1 — Choix & design system | direction F « Clair » maquettée | **à valider** |
+| 1 — Choix & design system | direction F « Clair », thèmes clair et sombre | **validée** · reste le scaffold Expo |
 | 2 — Implémentation | app Expo : découverte, recherche, fiche, notation, journal | à faire |
 | 3 — QA & mesure | a11y, perf, tests, événements analytics | à faire |
 

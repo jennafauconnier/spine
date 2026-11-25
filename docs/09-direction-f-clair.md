@@ -27,6 +27,26 @@ Typographie : Space Grotesk 700 pour les titres (22 / 17 / 15), Inter 400–600 
 (13 / 12 / 11 / 10). Marges 16 pt, rayons 12 pt (boutons) et 6 pt (couvertures), **aucune ombre**
 sauf la feuille modale.
 
+## Thème sombre
+
+Même structure, mêmes composants, seuls les jetons changent. Le thème clair reste le défaut ; le
+sombre est un choix explicite dans les réglages (et suit `useColorScheme` au premier lancement).
+
+| Rôle | Clair | Sombre | Contraste (sombre) |
+|---|---|---|---|
+| Fond | `#FFFFFF` | `#101013` | — |
+| Surface (champs, cartes) | `#F4F4F2` | `#1A1A1E` | — |
+| Encre | `#0B0B0C` | `#F3F1EC` | 16,83:1 |
+| Secondaire | `#5A5A60` | `#A9A9B0` | 8,13:1 |
+| Tertiaire | `#6E6E74` | `#8E8E96` | 5,84:1 |
+| Accent | `#1B4DFF` | `#7E97FF` | 7,02:1 |
+| Texte sur accent | `#FFFFFF` | `#0B0B0C` | 7,27:1 |
+| Carte « en cours » | `#1B4DFF` | `#2233C9` (blanc dessus 8,81:1) | — |
+
+**Point d'attention** : en sombre, le bouton principal passe en bleu clair — il faut donc que le
+libellé soit **noir**, pas blanc. C'est le seul endroit où le thème inverse les rôles ; un design
+system qui code `color: #fff` en dur sur les boutons se trompe ici.
+
 ## Écarts assumés avec Goodreads
 
 | Goodreads | Spine |

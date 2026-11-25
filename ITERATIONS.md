@@ -116,6 +116,19 @@ brief exploitable. Il faut, dès le départ, trois contraintes mesurables — un
 (« un utilisateur doit noter sans explication »), un niveau de rupture (« pas de grille de
 couvertures »), et un test (« 5 personnes comprennent l'écran en 3 s »).
 
+## Itération 6 — thème sombre
+
+`2026-11-25` · **0 $ de modèle**
+
+Les 5 écrans passent en jetons CSS (`--bg`, `--surf`, `--ink`, `--ink2`, `--ink3`, `--acc`, `--onacc`,
+`--hero`, `--line`) et un bouton « Thème sombre » bascule la palette. Contrastes recalculés :
+encre 16,83:1, accent 7,02:1, texte sur accent 7,27:1 en sombre.
+
+Deux bugs de la bascule, corrigés : le texte du bouton principal restait blanc sur un bleu clair
+(2,3:1 — illisible), et un fond `#fff` codé en dur dans la feuille de notation créait un panneau
+gris au-dessus d'elle. C'est exactement le genre de défaut qui apparaît quand une couleur est écrite
+en dur au lieu de passer par un jeton.
+
 ---
 
 ## Ce que la suite coûtera (ordre de grandeur)
