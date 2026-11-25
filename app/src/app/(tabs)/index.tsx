@@ -3,6 +3,7 @@ import { Pressable, ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Cover } from '@/components/Cover';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import { Stars } from '@/components/Stars';
 import { bookById, CURRENT, SUGGESTIONS, WISHLIST, type Book } from '@/data/books';
 import { fonts, radius, space } from '@/theme/tokens';
@@ -54,14 +55,10 @@ export default function DiscoverScreen() {
         <Text style={{ fontFamily: fonts.display, fontSize: 20, color: theme.ink, letterSpacing: -0.5 }}>
           Spine
         </Text>
-        <View
-          style={{
-            width: 28,
-            height: 28,
-            borderRadius: 14,
-            backgroundColor: theme.acc,
-          }}
-        />
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+          <ThemeToggle />
+          <View style={{ width: 28, height: 28, borderRadius: 14, backgroundColor: theme.acc }} />
+        </View>
       </View>
 
       {/* carte « en cours » : le seul aplat de couleur de l'app */}

@@ -1,18 +1,19 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Cover } from '@/components/Cover';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import { Stars } from '@/components/Stars';
 import { bookById } from '@/data/books';
 import { useStore } from '@/store/StoreProvider';
-import { fonts, radius, space } from '@/theme/tokens';
+import { fonts, space } from '@/theme/tokens';
 import { useTheme } from '@/theme/ThemeProvider';
 
 const MONTHS = ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.'];
 
 export default function JournalScreen() {
-  const { theme, mode, toggle } = useTheme();
+  const { theme } = useTheme();
   const insets = useSafeAreaInsets();
   const { entries } = useStore();
   const pending = entries.some((e) => e.pending);
@@ -26,15 +27,7 @@ export default function JournalScreen() {
         <Text style={{ fontFamily: fonts.display, fontSize: 20, color: theme.ink, letterSpacing: -0.5 }}>
           Journal
         </Text>
-        <Pressable
-          onPress={toggle}
-          accessibilityRole="button"
-          accessibilityLabel={mode === 'dark' ? 'Passer en thème clair' : 'Passer en thème sombre'}
-          style={{ borderWidth: 1.5, borderColor: theme.line2, borderRadius: radius.pill, paddingHorizontal: 11, paddingVertical: 7 }}>
-          <Text style={{ fontFamily: fonts.uiSemi, fontSize: 9.5, color: theme.ink }}>
-            {mode === 'dark' ? 'Thème clair' : 'Thème sombre'}
-          </Text>
-        </Pressable>
+        <ThemeToggle />
       </View>
 
       {pending ? (
