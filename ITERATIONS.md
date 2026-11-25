@@ -129,6 +129,26 @@ Deux bugs de la bascule, corrigés : le texte du bouton principal restait blanc 
 gris au-dessus d'elle. C'est exactement le genre de défaut qui apparaît quand une couleur est écrite
 en dur au lieu de passer par un jeton.
 
+## Itération 7 — sprint 1 implémenté (Expo)
+
+`2026-11-25` · **0 $ d'API**
+
+Le repo passe du dossier de conception à une app qui tourne. `app/` : Expo SDK 58, React Native 0.88,
+expo-router, TypeScript strict, thèmes clair et sombre.
+
+- 5 écrans : Découverte, Chercher, Journal, Fiche, Notation (modale).
+- `Button` capsule (52 pt, flèche ronde), `Stars` avec demi-étoile au tap, `Cover` typographique
+  sans réseau, `StoreProvider` en mémoire.
+- Notes → journal daté, bandeau « en attente » simulé.
+
+**Vérifié, pas supposé** : `tsc --noEmit` et `eslint` à 0 erreur, et `expo start --web` ouvre les
+5 écrans (captures dans la conversation). Ce qui manque est listé dans `app/README.md` : pas d'API,
+pas de persistance, pas de scan ISBN, pas de tests.
+
+**Ce qui a coûté du temps** : trois itérations pour trouver la bonne direction visuelle, contre une
+seule pour coder les écrans une fois les jetons fixés. C'est l'argument du dossier : le coût d'un
+projet est dans les décisions, pas dans les tokens.
+
 ---
 
 ## Ce que la suite coûtera (ordre de grandeur)

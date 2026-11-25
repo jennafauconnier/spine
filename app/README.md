@@ -1,10 +1,36 @@
-# app/ — application Expo
+# Spine — application Expo
 
-Rien ici pour l'instant, volontairement : la phase 0 s'arrête à la proposition.
+Expo SDK 58 · React Native 0.88 · expo-router · TypeScript strict.
 
-Au démarrage de la phase 1, ce dossier reçoit le scaffold Expo (`npx create-expo-app`) avec la
-direction retenue (par défaut : « Les Pages », `docs/07-direction-retenue.md`), puis les 5 écrans
-dans l'ordre du plan technique (`docs/02-tech-plan.md`, sprint 1 = parcours « noter »).
+```bash
+bun install          # ou npm install
+bun run ios          # simulateur iOS
+bun run android
+bun run web          # aperçu navigateur (vérifié)
+```
 
-Ne pas scaffolder avant le choix de la direction : les tokens, les rayons et la typographie changent
-tout le design system.
+## Ce qui est implémenté (sprint 1)
+
+| Écran | Route | État |
+|---|---|---|
+| Découverte | `src/app/(tabs)/index.tsx` | carte « en cours », suggestions, à lire ensuite |
+| Chercher | `src/app/(tabs)/search.tsx` | recherche locale, filtres, statut « déjà lu » |
+| Journal | `src/app/(tabs)/journal.tsx` | timeline datée, bandeau hors ligne, bascule de thème |
+| Fiche livre | `src/app/book/[id].tsx` | couverture, note communautaire, résumé, CTA |
+| Notation | `src/app/rate/[id].tsx` | 5 étoiles avec demi-étoile au tap, avis, options repliées |
+
+Design system dans `src/theme/tokens.ts` (thèmes clair et sombre), composants dans `src/components/`
+(`Button`, `Stars`, `Cover`), état en mémoire dans `src/store/StoreProvider.tsx`.
+
+## Ce qui n'est pas encore là (sprint 2)
+
+- Aucune API : les livres viennent de `src/data/books.ts` (7 entrées de démonstration).
+- Aucune persistance : les notes vivent en mémoire, elles disparaissent au redémarrage.
+- Le scan ISBN et les couvertures distantes (`expo-image`) ne sont pas branchés.
+- Pas de tests automatisés ; `bunx tsc --noEmit` et `bunx eslint .` passent.
+
+## Vérifications faites
+
+- `bunx tsc --noEmit` — 0 erreur.
+- `bunx eslint .` — 0 erreur.
+- `bun run web` — les 5 écrans s'affichent, thèmes clair et sombre, notation fonctionnelle.
