@@ -151,7 +151,7 @@ export default function DiscoverScreen() {
               </View>
             </View>
             <Text style={{ fontFamily: fonts.ui, fontSize: 9.5, color: theme.ink3 }}>
-              {new Date(entry.createdAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}
+              {new Date(entry.createdAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })}
             </Text>
           </Pressable>
         );
