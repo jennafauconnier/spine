@@ -19,7 +19,7 @@ par quel agent/modèle, pour quel coût) est journalisée dans [ITERATIONS.md](I
 | Phase | Contenu | État |
 |---|---|---|
 | 0 — Cadrage & propositions | brief PM, stories PO, plan technique, 3 directions UI + critique | **livré** (voir `docs/`) |
-| 1 — Choix & design system | arbitrage D vs E, tokens, composants, maquettes hi-fi | **en attente de ta décision** |
+| 1 — Choix & design system | direction F « Clair » maquettée | **à valider** |
 | 2 — Implémentation | app Expo : découverte, recherche, fiche, notation, journal | à faire |
 | 3 — QA & mesure | a11y, perf, tests, événements analytics | à faire |
 
@@ -34,9 +34,11 @@ docs/                     livrables de la phase 0
   04-direction-b.md       « Papier & marge »   — éditorial, chaud, annotations
   05-direction-c.md       « Moteur de goût »   — dense, rapide, recommandations expliquées
   06-critique.md          grille de notation des 3 directions + recommandation
-  08-pistes-d-e.md        pistes D (Tranche) et E (Affiche) : identités qui rompent avec Goodreads
-  mockups/index.html      maquettes interactives D et E (3 écrans chacune)
-  mockups/v1-trois-directions.html   v1 (Pellicule / Les Pages / Sillage), conservée pour l'historique
+  08-pistes-d-e.md        pistes D (Tranche) et E (Affiche), rejetées
+  09-direction-f-clair.md direction retenue : « Clair », simple et lisible
+  mockups/index.html      maquettes de la direction F (5 écrans)
+  mockups/v2-tranche-affiche.html    v2 (Tranche / Affiche), conservée pour l'historique
+  mockups/v1-trois-directions.html   v1 (Pellicule / Les Pages / Sillage)
 lab/
   team_design.py          harnais d'équipe d'agents (PM → PO → TL ‖ Design ×3 → Critique)
   llm.py                  appel OpenRouter + coût réel par appel

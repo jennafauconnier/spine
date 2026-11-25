@@ -100,6 +100,24 @@ marginal est nul : le jugement visuel reste humain, et c'est lui qui a invalidé
 
 ---
 
+## Itération 5 — Direction F « Clair » (réponse aux deux rejets)
+
+`2026-11-25` · **0 $ de modèle**
+
+Après « ne change pas assez de Goodreads » (v1) puis « je n'aime pas les tranches, il faut du simple
+et du clair » (v2), retour à des composants standards : carte « en cours », barre d'onglets à trois
+entrées, étoiles, une action principale par écran. L'identité tient à trois choses seulement : un
+accent unique (cobalt), de gros titres (Space Grotesk 22 pt), et zéro décoration.
+Livrables : `docs/09-direction-f-clair.md`, `docs/mockups/index.html` (la v2 reste dans
+`v2-tranche-affiche.html`).
+
+**Ce que ces trois rejets disent du brief initial** : « moderne + inspiré de Letterboxd » n'est pas un
+brief exploitable. Il faut, dès le départ, trois contraintes mesurables — un niveau de familiarité
+(« un utilisateur doit noter sans explication »), un niveau de rupture (« pas de grille de
+couvertures »), et un test (« 5 personnes comprennent l'écran en 3 s »).
+
+---
+
 ## Ce que la suite coûtera (ordre de grandeur)
 
 | Étape | Modèle routé | Coût estimé |
