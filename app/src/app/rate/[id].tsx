@@ -41,7 +41,7 @@ export default function RateScreen() {
         <View style={{ alignItems: 'center', paddingTop: insets.top + 26 }}>
           <Cover book={book} width={116} showText={false} />
         </View>
-        <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: '#000', opacity: 0.42 }} />
+        <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: '#000', opacity: 0.5 }} />
 
         <View
           style={{
@@ -49,7 +49,7 @@ export default function RateScreen() {
             left: 0,
             right: 0,
             bottom: 0,
-            top: 196,
+            top: advanced ? 176 : 320,
             backgroundColor: theme.bg,
             borderTopLeftRadius: 20,
             borderTopRightRadius: 20,

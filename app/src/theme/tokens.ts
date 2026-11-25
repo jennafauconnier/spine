@@ -42,7 +42,7 @@ const light: Theme = {
   onHero: '#FFFFFF',
   accWeak: '#F3F5FF',
   accLine: '#DDE3FF',
-  starEmpty: '#E4E4DF',
+  starEmpty: '#D2D2CB',
 };
 
 const dark: Theme = {
