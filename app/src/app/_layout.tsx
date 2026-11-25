@@ -26,7 +26,11 @@ function Navigator() {
         <Stack.Screen name="book/[id]" options={{ animation: 'slide_from_right' }} />
         <Stack.Screen
           name="rate/[id]"
-          options={{ presentation: 'modal', animation: 'slide_from_bottom' }}
+          options={{
+            presentation: 'transparentModal',
+            animation: 'fade',
+            contentStyle: { backgroundColor: 'transparent' },
+          }}
         />
       </Stack>
     </>
