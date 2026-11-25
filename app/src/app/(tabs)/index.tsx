@@ -3,8 +3,10 @@ import { Pressable, ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Cover } from '@/components/Cover';
-import { CURRENT, NEXT_UP, SUGGESTIONS, type Book } from '@/data/books';
+import { Stars } from '@/components/Stars';
+import { bookById, CURRENT, SUGGESTIONS, WISHLIST, type Book } from '@/data/books';
 import { fonts, radius, space } from '@/theme/tokens';
+import { useStore } from '@/store/StoreProvider';
 import { useTheme } from '@/theme/ThemeProvider';
 
 function Suggestion({ book, width }: { book: Book; width: number }) {
@@ -34,6 +36,7 @@ export default function DiscoverScreen() {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
   const router = useRouter();
+  const { entries } = useStore();
 
   return (
     <ScrollView
@@ -107,7 +110,58 @@ export default function DiscoverScreen() {
       </Pressable>
 
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', paddingHorizontal: space.lg, paddingTop: space.lg, paddingBottom: space.sm }}>
-        <Text style={{ fontFamily: fonts.display, fontSize: 13, color: theme.ink }}>Pour vous</Text>
+        <Text style={{ fontFamily: fonts.display, fontSize: 13, color: theme.ink }}>Je veux lire</Text>
+        <Text style={{ fontFamily: fonts.uiSemi, fontSize: 10, color: theme.acc }}>{WISHLIST.length} livres</Text>
+      </View>
+
+      <View style={{ flexDirection: 'row', gap: 10, paddingHorizontal: space.lg }}>
+        {WISHLIST.map((b) => (
+          <Pressable
+            key={b.id}
+            style={{ width: 62 }}
+            accessibilityRole="button"
+            accessibilityLabel={`${b.title}, dans votre liste`}
+            onPress={() => router.push({ pathname: '/book/[id]', params: { id: b.id } })}>
+            <Cover book={b} width={62} height={92} showText={false} />
+            <Text numberOfLines={2} style={{ fontFamily: fonts.ui, fontSize: 9, lineHeight: 12, color: theme.ink2, marginTop: 5 }}>
+              {b.title}
+            </Text>
+          </Pressable>
+        ))}
+      </View>
+
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', paddingHorizontal: space.lg, paddingTop: space.xl, paddingBottom: space.sm }}>
+        <Text style={{ fontFamily: fonts.display, fontSize: 13, color: theme.ink }}>Lus récemment</Text>
+        <Text style={{ fontFamily: fonts.uiSemi, fontSize: 10, color: theme.acc }}>Journal</Text>
+      </View>
+
+      {entries.slice(0, 2).map((entry) => {
+        const b = bookById(entry.bookId);
+        return (
+          <Pressable
+            key={entry.id}
+            accessibilityRole="button"
+            accessibilityLabel={`${b.title}, noté ${entry.value} sur 5`}
+            onPress={() => router.push({ pathname: '/book/[id]', params: { id: b.id } })}
+            style={{ flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: space.lg, paddingVertical: 7 }}>
+            <Cover book={b} width={30} height={44} showText={false} />
+            <View style={{ flex: 1 }}>
+              <Text numberOfLines={1} style={{ fontFamily: fonts.uiSemi, fontSize: 11.5, color: theme.ink }}>
+                {b.title}
+              </Text>
+              <View style={{ marginTop: 3 }}>
+                <Stars value={entry.value} size={9} />
+              </View>
+            </View>
+            <Text style={{ fontFamily: fonts.ui, fontSize: 9.5, color: theme.ink3 }}>
+              {new Date(entry.createdAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}
+            </Text>
+          </Pressable>
+        );
+      })}
+
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', paddingHorizontal: space.lg, paddingTop: space.xl, paddingBottom: space.sm }}>
+        <Text style={{ fontFamily: fonts.display, fontSize: 13, color: theme.ink }}>Suggestions</Text>
         <Text style={{ fontFamily: fonts.uiSemi, fontSize: 10, color: theme.acc }}>Tout voir</Text>
       </View>
 
@@ -115,36 +169,6 @@ export default function DiscoverScreen() {
         {SUGGESTIONS.map((b) => (
           <Suggestion key={b.id} book={b} width={140} />
         ))}
-      </View>
-
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', paddingHorizontal: space.lg, paddingTop: space.lg, paddingBottom: space.sm }}>
-        <Text style={{ fontFamily: fonts.display, fontSize: 13, color: theme.ink }}>À lire ensuite</Text>
-        <Text style={{ fontFamily: fonts.uiSemi, fontSize: 10, color: theme.acc }}>{NEXT_UP.length} livres</Text>
-      </View>
-
-      <View style={{ flexDirection: 'row', gap: 10, paddingHorizontal: space.lg }}>
-        {NEXT_UP.map((b) => (
-          <Pressable
-            key={b.id}
-            accessibilityRole="button"
-            accessibilityLabel={b.title}
-            onPress={() => router.push({ pathname: '/book/[id]', params: { id: b.id } })}>
-            <Cover book={b} width={54} height={80} showText={false} />
-          </Pressable>
-        ))}
-        <View
-          style={{
-            width: 54,
-            height: 80,
-            borderRadius: 6,
-            borderWidth: 1,
-            borderStyle: 'dashed',
-            borderColor: theme.line2,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-          <Text style={{ fontFamily: fonts.uiMedium, fontSize: 10, color: theme.ink3 }}>+1</Text>
-        </View>
       </View>
 
     </ScrollView>

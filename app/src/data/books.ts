@@ -100,7 +100,7 @@ export const BOOKS: Book[] = [
 
 export const CURRENT = BOOKS[2]; // La Route, en cours
 export const SUGGESTIONS = [BOOKS[0], BOOKS[1]];
-export const NEXT_UP = [BOOKS[3], BOOKS[4], BOOKS[6]];
+export const WISHLIST = [BOOKS[3], BOOKS[4], BOOKS[6], BOOKS[5]];
 
 export function bookById(id?: string) {
   return BOOKS.find((b) => b.id === id) ?? BOOKS[0];

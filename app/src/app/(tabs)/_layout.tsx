@@ -25,7 +25,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Découvrir',
+          title: 'Mes livres',
           tabBarIcon: ({ color, size }) => <Ionicons name="home-outline" size={size - 2} color={String(color)} />,
         }}
       />

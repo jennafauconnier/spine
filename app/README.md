@@ -13,7 +13,7 @@ bun run web          # aperçu navigateur (vérifié)
 
 | Écran | Route | État |
 |---|---|---|
-| Découverte | `src/app/(tabs)/index.tsx` | carte « en cours », suggestions, à lire ensuite |
+| Mes livres | `src/app/(tabs)/index.tsx` | en cours, liste d'envies, lus récemment, suggestions |
 | Chercher | `src/app/(tabs)/search.tsx` | recherche locale, filtres, statut « déjà lu » |
 | Journal | `src/app/(tabs)/journal.tsx` | timeline datée, bandeau hors ligne, bascule de thème |
 | Fiche livre | `src/app/book/[id].tsx` | couverture, note communautaire, résumé, CTA |
