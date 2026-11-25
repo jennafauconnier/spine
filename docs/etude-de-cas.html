@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Spine — étude de cas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0B0B0C; --ink2:#55555C; --ink3:#77777E; --line:#E7E7E3; --surf:#F6F6F3;
+  --acc:#1B4DFF; --paper:#FFFFFF; --max:880px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font:16px/1.65 Inter,system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 24px}
+
+/* hero */
+.hero{padding:72px 0 40px;border-bottom:1px solid var(--line)}
+.kicker{font:600 11px/1 Inter;letter-spacing:.18em;text-transform:uppercase;color:var(--acc);margin-bottom:18px}
+h1{font:700 clamp(32px,5vw,46px)/1.05 'Space Grotesk';letter-spacing:-.03em;margin:0 0 18px;max-width:16ch}
+.lede{font-size:18px;line-height:1.6;color:var(--ink2);max-width:60ch;margin:0 0 28px}
+.meta{display:flex;flex-wrap:wrap;gap:28px;font-size:13px;color:var(--ink3)}
+.meta b{display:block;font:600 11px/1.6 Inter;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3)}
+.meta span{font:500 14px/1.5 Inter;color:var(--ink)}
+
+/* sections */
+section{padding:56px 0;border-bottom:1px solid var(--line)}
+h2{font:700 clamp(22px,3vw,30px)/1.15 'Space Grotesk';letter-spacing:-.02em;margin:0 0 10px}
+.sub{color:var(--ink2);max-width:62ch;margin:0 0 32px}
+h3{font:700 18px/1.3 'Space Grotesk';letter-spacing:-.01em;margin:0 0 4px}
+.num{font:700 13px/1 'Space Grotesk';color:var(--acc);letter-spacing:.02em}
+
+/* tableaux */
+table{width:100%;border-collapse:collapse;margin:8px 0 0;font-size:14.5px}
+th{text-align:left;font:600 11px/1.5 Inter;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);
+  border-bottom:1px solid var(--ink);padding:0 12px 8px 0}
+td{padding:12px 12px 12px 0;border-bottom:1px solid var(--line);vertical-align:top;color:var(--ink2)}
+td:first-child{color:var(--ink);font-weight:500;width:38%}
+
+/* écran */
+.screen{display:grid;grid-template-columns:300px 1fr;gap:40px;align-items:start;margin:44px 0 0}
+.screen:first-of-type{margin-top:8px}
+.shot{border-radius:26px;overflow:hidden;border:1px solid var(--line);box-shadow:0 24px 48px -28px rgba(0,0,0,.35);background:#fff}
+.shot img{width:100%}
+@media (max-width:760px){.screen{grid-template-columns:1fr;gap:20px}.shot{max-width:300px}}
+
+/* cartes process */
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:8px}
+@media (max-width:760px){.cards{grid-template-columns:1fr}}
+.card{background:var(--surf);border-radius:14px;padding:18px}
+.card b{display:block;font:700 26px/1 'Space Grotesk';color:var(--acc);margin-bottom:8px;letter-spacing:-.02em}
+.card span{font-size:14px;color:var(--ink2)}
+
+/* palette */
+.swatches{display:flex;gap:10px;margin-top:8px;flex-wrap:wrap}
+.sw{width:64px}
+.sw i{display:block;height:56px;border-radius:10px;border:1px solid rgba(0,0,0,.08)}
+.sw span{display:block;font:500 11px/1.5 ui-monospace,Menlo,monospace;color:var(--ink3);margin-top:6px}
+
+.callout{border-left:3px solid var(--acc);padding:4px 0 4px 18px;margin:28px 0;color:var(--ink2);font-size:15px}
+.foot{padding:48px 0 72px;color:var(--ink3);font-size:13px}
+.cta{display:inline-flex;align-items:center;gap:10px;background:var(--acc);color:#fff;text-decoration:none;
+  border-radius:999px;padding:14px 22px;font:600 14px/1 Inter;margin-top:8px}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="kicker">Étude de cas · produit mobile</div>
+    <h1>Refaire les deux gestes que Goodreads rate</h1>
+    <p class="lede">Noter un livre et le retrouver. Deux gestes quotidiens, trois écrans et un
+      formulaire chez Goodreads. Spine les ramène à un pouce, deux taps et une trace datée.</p>
+    <div class="meta">
+      <div><b>Rôle</b><span>Produit, UX, dev mobile</span></div>
+      <div><b>Stack</b><span>React Native · Expo · TypeScript</span></div>
+      <div><b>Livré</b><span>5 écrans, 2 thèmes, iOS</span></div>
+      <div><b>Coût API</b><span>0,1135 $ · 8 appels</span></div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <h2>Le constat</h2>
+    <p class="sub">Goodreads remplit sa fonction — catalogue, étagères, avis — mais deux parcours y
+      coûtent plus cher que le geste qu'ils servent.</p>
+    <table>
+      <thead><tr><th>Problème</th><th>Conséquence</th></tr></thead>
+      <tbody>
+        <tr><td>Noter demande 3 écrans : fiche → « Write a review » → formulaire → 5 étoiles entières</td>
+            <td>On ne note pas en passant. La note arrive des jours plus tard, ou jamais.</td></tr>
+        <tr><td>La recherche rend une liste de texte, livre et éditions mélangés</td>
+            <td>On cherche un livre vu en librairie et on tombe sur une édition de 1994.</td></tr>
+        <tr><td>Aucune trace datée : une note écrase la précédente</td>
+            <td>Impossible de dire « lu en novembre », ni de relire sans perdre l'ancienne note.</td></tr>
+      </tbody>
+    </table>
+    <p class="callout">Trois directions artistiques ont été produites puis rejetées avant celle-ci.
+      Le journal d'itérations garde la trace des impasses — c'est là qu'on apprend le plus.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Cinq écrans, cinq décisions</h2>
+    <p class="sub">Chaque écran répond à un problème précis. Rien n'est décoratif.</p>
+
+    <article class="screen">
+      <div class="shot"><img src="captures/case-1-mes-livres.png" alt="Écran Mes livres"></div>
+      <div>
+        <div class="num">01</div>
+        <h3>Mes livres — la bibliothèque avant le flux</h3>
+        <table>
+          <tbody>
+            <tr><td>Chez Goodreads, l'accueil est un flux d'amis ; ce qu'on lit soi-même est relégué.</td>
+                <td>L'écran s'ouvre sur une carte « En cours », seul aplat de couleur de l'app, avec progression et bouton « Reprendre ».</td></tr>
+            <tr><td>Envies et lectures sont dans le même sac d'« étagères ».</td>
+                <td>Deux blocs distincts : Je veux lire, puis Lus récemment avec note et date.</td></tr>
+            <tr><td>Découvrir demande un onglet séparé.</td>
+                <td>Les suggestions vivent en bas, avec leur motif écrit en clair.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </article>
+
+    <article class="screen">
+      <div class="shot"><img src="captures/case-2-chercher.png" alt="Écran Chercher"></div>
+      <div>
+        <div class="num">02</div>
+        <h3>Chercher — reconnaître, pas lire</h3>
+        <table>
+          <tbody>
+            <tr><td>Liste dense où titre, auteur, année et note se confondent.</td>
+                <td>Une ligne : couverture, titre, auteur · année, et un seul bouton « Ajouter ».</td></tr>
+            <tr><td>Aucun filtre rapide, il faut ouvrir un panneau.</td>
+                <td>Trois pastilles : Tous / Déjà lus / À lire.</td></tr>
+            <tr><td>La couverture est une vignette de 40 px.</td>
+                <td>Elle ouvre la ligne, à hauteur de lecture : c'est ce qu'on reconnaît d'un livre.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </article>
+
+    <article class="screen">
+      <div class="shot"><img src="captures/case-3-fiche.png" alt="Écran fiche livre"></div>
+      <div>
+        <div class="num">03</div>
+        <h3>La fiche — décider en une hauteur d'écran</h3>
+        <table>
+          <tbody>
+            <tr><td>Fiche encombrée : séries, éditions, formats, amis…</td>
+                <td>Quatre lignes d'information, une note, un extrait, un résumé.</td></tr>
+            <tr><td>L'action principale est un lien texte au milieu de la page.</td>
+                <td>Un bouton capsule pleine largeur, en bas, dans la zone du pouce.</td></tr>
+            <tr><td>Ajouter à sa bibliothèque est une autre page.</td>
+                <td>Un bouton rond « + » à côté du bouton principal.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </article>
+
+    <article class="screen">
+      <div class="shot"><img src="captures/case-4-notation.png" alt="Écran de notation"></div>
+      <div>
+        <div class="num">04</div>
+        <h3>La notation — deux gestes, une demi-étoile</h3>
+        <table>
+          <tbody>
+            <tr><td>5 étoiles entières, dans un formulaire séparé de la fiche.</td>
+                <td>Une feuille modale par-dessus la fiche : le livre reste visible.</td></tr>
+            <tr><td>Impossible de mettre 4,5.</td>
+                <td>La moitié gauche d'une étoile donne la demi-note ; le chiffre géant lève l'ambiguïté.</td></tr>
+            <tr><td>Avis obligatoire, cases à cocher, formulaire.</td>
+                <td>Avis facultatif ; spoiler, privé, statut et date sont repliés sous « Plus d'options ».</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </article>
+
+    <article class="screen">
+      <div class="shot"><img src="captures/case-5-journal.png" alt="Écran Journal"></div>
+      <div>
+        <div class="num">05</div>
+        <h3>Le journal — la trace datée</h3>
+        <table>
+          <tbody>
+            <tr><td>La note remplace la précédente, sans date.</td>
+                <td>Chaque note crée une entrée datée : relire crée une deuxième entrée.</td></tr>
+            <tr><td>Aucun état hors ligne : la note est perdue sans réseau.</td>
+                <td>Bandeau « Une note attend le réseau » et statut par entrée.</td></tr>
+            <tr><td>Thème imposé.</td>
+                <td>Bascule clair/sombre en icône, sur l'accueil et dans le journal.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Le design system</h2>
+    <p class="sub">Un seul accent, deux familles typographiques, aucune ombre. La hiérarchie se fait
+      par la couleur et l'espace, jamais par des effets.</p>
+    <div class="swatches">
+      <div class="sw"><i style="background:#1B4DFF"></i><span>#1B4DFF</span></div>
+      <div class="sw"><i style="background:#0B0B0C"></i><span>#0B0B0C</span></div>
+      <div class="sw"><i style="background:#5A5A60"></i><span>#5A5A60</span></div>
+      <div class="sw"><i style="background:#F4F4F2"></i><span>#F4F4F2</span></div>
+      <div class="sw"><i style="background:#101013"></i><span>#101013</span></div>
+      <div class="sw"><i style="background:#7E97FF"></i><span>#7E97FF</span></div>
+    </div>
+    <table style="margin-top:26px">
+      <tbody>
+        <tr><td>Accent</td><td>Cobalt 5,91:1 sur blanc — une seule couleur actionnable</td></tr>
+        <tr><td>Typographie</td><td>Space Grotesk 700 (titres 22 pt) · Inter 400–600 (interface)</td></tr>
+        <tr><td>Formes</td><td>Boutons capsule 52 pt, rayons 12 pt, zéro ombre</td></tr>
+        <tr><td>Sombre</td><td>Encre 16,8:1 · accent 7,0:1 · texte sur accent 7,3:1</td></tr>
+        <tr><td>Accessibilité</td><td>Cibles ≥ 44 pt, libellés VoiceOver, étoiles en <code>adjustable</code></td></tr>
+      </tbody>
+    </table>
+    <p class="callout">Tous les contrastes sont calculés par script. Les modèles de langage se trompent
+      systématiquement sur ce calcul : ils annonçaient 4,8:1 pour un couple qui mesure 3,45:1.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Le process, et son coût réel</h2>
+    <p class="sub">Une équipe d'agents — PM → PO → Tech Lead ‖ 3 designers → critique — chacun avec un
+      modèle choisi selon le coût de son erreur.</p>
+    <div class="cards">
+      <div class="card"><b>0,0892 $</b><span>7 appels : cadrage, 6 stories, plan technique, 3 directions, critique</span></div>
+      <div class="card"><b>0,0243 $</b><span>1 appel de consolidation : fusion des emprunts et des corrections</span></div>
+      <div class="card"><b>0 $</b><span>le code : 15 fichiers, 1 386 lignes, 5 écrans, 2 thèmes</span></div>
+    </div>
+    <table style="margin-top:26px">
+      <tbody>
+        <tr><td>Le coût est dans les décisions</td><td>11 centimes de conception, zéro de code — mais trois allers-retours de design, parce que le brief ne disait pas ce qu'il interdisait.</td></tr>
+        <tr><td>Un modèle ne mesure pas</td><td>Le calcul WCAG est passé dans un script ; le goût reste une décision humaine.</td></tr>
+        <tr><td>La critique vaut mieux que la génération</td><td>Le même pipeline qui produit trois directions moyennes produit une critique utile.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Ce qui est livré, ce qui ne l'est pas</h2>
+    <table>
+      <tbody>
+        <tr><td>Livré</td><td>5 écrans, thèmes clair et sombre, notation fonctionnelle de bout en bout, build iOS réussi, TypeScript et ESLint à 0 erreur.</td></tr>
+        <tr><td>Absent (sprint 2)</td><td>API Open Library / Google Books, persistance des notes, scan ISBN, tests automatisés.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="wrap">
+    Code et journal d'itérations : <a href="https://github.com/jennafauconnier/spine">github.com/jennafauconnier/spine</a>
+  </div>
+</footer>
+
+</body>
+</html>

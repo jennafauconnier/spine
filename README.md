@@ -14,6 +14,11 @@ Ce repo contient la démarche complète : cadrage, stories, choix techniques, **
 artistiques**, specs d'écrans, puis implémentation Expo. Chaque itération (ce qui a été produit,
 par quel agent/modèle, pour quel coût) est journalisée dans [ITERATIONS.md](ITERATIONS.md).
 
+## Étude de cas
+
+`docs/ETUDE-DE-CAS.md` (markdown) et `docs/etude-de-cas.html` (page prête pour le portfolio) :
+chaque écran, le problème Goodreads qu'il résout, le design system, le process et son coût réel.
+
 ## Statut
 
 | Phase | Contenu | État |

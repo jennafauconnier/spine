@@ -149,6 +149,14 @@ pas de persistance, pas de scan ISBN, pas de tests.
 seule pour coder les écrans une fois les jetons fixés. C'est l'argument du dossier : le coût d'un
 projet est dans les décisions, pas dans les tokens.
 
+## Itération 8 — étude de cas et captures
+
+`2026-11-25` · **0 $ de modèle**
+
+Captures des 5 écrans pris sur le simulateur (pas des maquettes), parcours complet rejoué :
+rechercher → fiche → noter 4,5 (demi-étoile) → l'entrée datée apparaît dans le journal.
+Livrables : `docs/ETUDE-DE-CAS.md` et `docs/etude-de-cas.html`, réutilisables pour le portfolio.
+
 ---
 
 ## Ce que la suite coûtera (ordre de grandeur)
