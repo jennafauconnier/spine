@@ -1,0 +1,940 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Spine — 3 directions artistiques</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;500;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&family=Manrope:wght@400;600;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --page:#0A0A0B; --ink:#EDEAE3; --dim:#8A8A90; --line:#242426;
+  --phone:#16161a;
+}
+*{box-sizing:border-box;-webkit-font-smoothing:antialiased}
+html,body{margin:0}
+body{background:var(--page);color:var(--ink);font:14px/1.5 Inter,system-ui,-apple-system,sans-serif}
+a{color:inherit}
+
+/* ---------- chrome de la page ---------- */
+.top{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  padding:14px 24px;background:rgba(10,10,11,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.brand{font:600 15px/1 Inter;letter-spacing:.02em}
+.brand span{color:var(--dim);font-weight:400;margin-left:8px}
+.nav{display:flex;gap:6px;margin-left:auto}
+.nav button{appearance:none;border:1px solid var(--line);background:transparent;color:var(--dim);
+  font:500 12px/1 Inter;padding:9px 13px;border-radius:999px;cursor:pointer;transition:.15s}
+.nav button:hover{color:var(--ink);border-color:#3a3a3e}
+.nav button[aria-selected="true"]{background:var(--ink);color:#111;border-color:var(--ink)}
+.top .note{width:100%;font-size:11px;color:var(--dim)}
+.top .note b{color:#c9c5bc;font-weight:500}
+
+.dir{display:none;grid-template-columns:276px minmax(0,1fr);gap:28px;padding:26px 24px 40px}
+.dir.on{display:grid}
+@media (max-width:820px){.dir.on{grid-template-columns:1fr}}
+
+.meta h2{font-size:22px;line-height:1.15;margin:0 0 6px;letter-spacing:-.01em}
+.meta .kicker{font:600 10px/1 Inter;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin-bottom:10px}
+.meta p{color:#B9B5AC;font-size:12.5px;margin:0 0 14px}
+.score{display:inline-flex;align-items:center;gap:8px;font:600 11px/1 Inter;letter-spacing:.04em;
+  border:1px solid #333;border-radius:999px;padding:6px 10px;margin-bottom:16px;color:#cfcabf}
+.score b{font-size:13px;color:#fff}
+.pick{border-color:#8f7a4a;color:#E8D8A8;background:#1c1911}
+.pts{list-style:none;padding:0;margin:0 0 18px}
+.pts li{position:relative;padding-left:14px;font-size:12px;color:#B9B5AC;margin-bottom:7px}
+.pts li::before{content:"";position:absolute;left:0;top:6px;width:4px;height:4px;border-radius:50%;background:currentColor;opacity:.55}
+.sw{display:flex;gap:6px;margin-bottom:6px}
+.sw i{width:26px;height:26px;border-radius:50%;border:1px solid rgba(255,255,255,.12);display:block}
+.tok{font:11px/1.7 JetBrains Mono,monospace;color:#8f8b83}
+.tok b{color:#cfcabf;font-weight:400}
+.railwrap{position:relative;min-width:0}
+.rail{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;padding:2px 2px 14px;scrollbar-width:thin}
+.rail::-webkit-scrollbar{height:8px}
+.rail::-webkit-scrollbar-thumb{background:#2b2b2e;border-radius:8px}
+.railtop{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.railtop em{font-style:normal;font:11px/1 Inter;color:var(--dim)}
+.railbtn{margin-left:auto;display:flex;gap:6px}
+.railbtn button{width:30px;height:30px;border-radius:50%;border:1px solid var(--line);background:#131315;
+  color:#c9c5bc;cursor:pointer;font-size:13px;line-height:1}
+.railbtn button:hover{background:#1c1c1f}
+
+/* ---------- téléphone ---------- */
+.phone{flex:0 0 300px;width:300px;height:650px;scroll-snap-align:start;background:var(--bg);
+  border:7px solid var(--phone);border-radius:34px;overflow:hidden;position:relative;
+  box-shadow:0 22px 44px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.05)}
+.cap{position:absolute;left:0;right:0;bottom:-1px;display:none}
+.phone::after{content:attr(data-cap);position:absolute;top:0;left:0;z-index:9;padding:5px 9px 4px;
+  border-radius:0 0 7px 0;font:600 7.5px/1 Inter;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--fg);background:var(--chipbg);backdrop-filter:blur(4px);opacity:.92}
+.stat{height:22px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;
+  font:600 9px/1 Inter;color:var(--fg);opacity:.75;letter-spacing:.02em}
+.stat i{display:flex;gap:3px;align-items:center;font-style:normal}
+.stat u{display:block;width:14px;height:7px;border:1px solid currentColor;border-radius:2px;text-decoration:none;position:relative}
+.stat u::after{content:"";position:absolute;inset:1px;right:4px;background:currentColor;border-radius:1px}
+.sc{height:calc(100% - 22px);display:flex;flex-direction:column;position:relative;overflow:hidden;color:var(--fg)}
+
+/* ---------- éléments partagés ---------- */
+.cv{position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;
+  padding:9px 8px;border-radius:1px;color:#fff;font-family:var(--serif);line-height:1.12;
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.18)}
+.cv::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.28),rgba(0,0,0,0) 14%,rgba(255,255,255,.06) 92%,rgba(0,0,0,.3))}
+.cv::after{content:"";position:absolute;inset:0;opacity:.5;mix-blend-mode:overlay;
+  background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.05) 0 1px,transparent 1px 3px)}
+.cv i{position:relative;font-style:normal;font-weight:700;font-size:13px;letter-spacing:-.01em}
+.cv u{position:relative;text-decoration:none;font-size:8px;opacity:.75;letter-spacing:.06em;text-transform:uppercase;margin-top:4px}
+.cv.c1{background:linear-gradient(150deg,#1d4a37,#0d2419 70%)}
+.cv.c2{background:linear-gradient(160deg,#d0783f,#7e3418 75%)}
+.cv.c3{background:linear-gradient(150deg,#efe4cc,#c9b68f 80%);color:#2a2118}
+.cv.c4{background:linear-gradient(200deg,#31467a,#111a33 75%)}
+.cv.c5{background:linear-gradient(160deg,#d5503f,#8d2318 78%)}
+.cv.c6{background:linear-gradient(150deg,#4c4a4f,#1c1b1f 78%)}
+.cv.c7{background:linear-gradient(160deg,#e8d9c3,#b08e6a 85%);color:#2b2318}
+
+.stars{display:inline-flex;gap:1px;font-size:13px;line-height:1;letter-spacing:0}
+.stars .s{position:relative;display:block}
+.stars .s>span{color:var(--empt)}
+.stars .s>b{position:absolute;left:0;top:0;overflow:hidden;white-space:nowrap;color:var(--acc);font-weight:400}
+.stars .s[data-f="0"]>b{width:0}
+.stars .s[data-f=".5"]>b{width:50%}
+.stars .s[data-f="1"]>b{width:100%}
+.rule{height:1px;background:var(--rule);border:0;margin:0}
+.lbl{font:600 9px/1 Inter;letter-spacing:.14em;text-transform:uppercase;color:var(--mut)}
+.btn{display:flex;align-items:center;justify-content:center;height:40px;border-radius:var(--rbtn,6px);
+  font:600 12px/1 Inter;letter-spacing:.02em;border:0}
+.btn.acc{background:var(--acc);color:var(--btnfg)}
+.btn.ghost{border:1px solid var(--rule);color:var(--fg);background:transparent}
+.tabbar{display:flex;justify-content:space-around;align-items:center;height:46px;border-top:1px solid var(--rule);
+  font:9px/1 Inter;color:var(--mut);padding-bottom:4px;margin-top:auto}
+.tabbar b{display:block;font-size:14px;margin-bottom:3px;color:var(--mut);font-weight:400}
+.tabbar .on{color:var(--acc)}
+.tabbar .on b{color:var(--acc)}
+.badge{display:inline-flex;align-items:center;gap:3px;font:600 7.5px/1 Inter;letter-spacing:.06em;
+  text-transform:uppercase;padding:3px 5px;border-radius:3px;background:var(--acc);color:var(--btnfg)}
+.search{display:flex;align-items:center;gap:7px;height:38px;padding:0 11px;border-radius:var(--rinput,8px);
+  background:var(--surf2);border:1px solid var(--rule);color:var(--mut);font-size:11px}
+.search svg{flex:0 0 auto;opacity:.8}
+.hint{font:9px/1.4 Inter;color:var(--mut);text-align:center;padding:6px 6px 0;opacity:.85}
+
+/* ---------- A · Pellicule ---------- */
+.a{--bg:#1A1A1E;--fg:#F5F0E8;--fg2:#9A9A9E;--mut:#9A9A9E;--acc:#E0574F;--btnfg:#141416;
+  --surf:#2C2C30;--surf2:#232327;--rule:#313136;--empt:#4A4A50;--serif:'Archivo Narrow',Impact,sans-serif;
+  --sans:Inter,sans-serif;--rbtn:4px;--rinput:6px;--chipbg:rgba(14,14,16,.82);font-family:var(--sans)}
+.a .h1{font-family:var(--serif);font-weight:700;letter-spacing:-.01em;font-size:20px;line-height:1.05;text-transform:none}
+.a .eyebrow{font:600 8.5px/1 Inter;letter-spacing:.2em;text-transform:uppercase;color:var(--fg2)}
+.a .scroll{overflow:hidden;flex:1}
+.a .filmstrip{display:flex;gap:9px;padding:0 16px;margin-top:9px}
+.a .fs{flex:0 0 196px;position:relative;border-radius:2px;overflow:hidden}
+.a .fs .cv{height:230px;border-radius:2px;padding:10px}
+.a .fs .cv i,.a .fs .cv u{opacity:0}
+.a .fs .grad{position:absolute;inset:0;background:linear-gradient(0deg,rgba(26,26,30,.92) 2%,transparent 45%)}
+.a .fs .cap2{position:absolute;left:9px;right:9px;bottom:8px}
+.a .fs .cap2 b{display:block;font:700 13px/1.05 'Archivo Narrow',sans-serif}
+.a .fs .cap2 em{display:block;font:10px/1.3 Inter;color:#c8c3ba;font-style:normal;margin-top:2px}
+.a .hero{position:relative;height:236px;margin:0 0 0}
+.a .hero .cv{position:absolute;inset:0;border-radius:0;justify-content:flex-end;padding:16px}
+.a .hero .cv i{font-size:19px}
+.a .hero .shade{position:absolute;inset:0;background:linear-gradient(0deg,rgba(26,26,30,.95) 6%,rgba(26,26,30,.18) 55%,rgba(26,26,30,.42))}
+.a .hero .txt{position:absolute;left:16px;right:16px;bottom:12px}
+.a .hero .txt em{display:block;font:10px/1.3 Inter;color:#cfc9c0;font-style:normal;margin-top:2px}
+.a .prog{height:2px;background:#3a3a3f;margin-top:9px;position:relative}
+.a .prog i{position:absolute;inset:0 45% 0 0;background:var(--acc)}
+.a .note{font:10px/1.35 Inter;color:var(--mut)}
+.a .grid2{display:grid;grid-template-columns:1fr 1fr;gap:9px 9px;padding:0 16px}
+.a .grid2>div{display:flex;flex-direction:column}
+.a .grid2 .cv{height:170px}
+.a .tline{display:flex;justify-content:space-between;align-items:baseline;padding:0 16px}
+.a .sheet{position:absolute;left:0;right:0;bottom:0;top:44px;background:#18181C;border-top:1px solid #3a3a40;
+  border-radius:16px 16px 0 0;padding:14px 18px 18px;display:flex;flex-direction:column}
+.a .big{font:700 54px/0.9 'Archivo Narrow',sans-serif;letter-spacing:-.03em}
+.a .seg{display:flex;background:#232327;border-radius:4px;padding:2px;font:600 9px/1 Inter;letter-spacing:.04em}
+.a .seg span{flex:1;text-align:center;padding:6px 0;border-radius:3px;color:var(--mut)}
+.a .seg .on{background:#35353b;color:var(--fg)}
+.a .switchrow{display:flex;justify-content:space-between;align-items:center;font:11px/1 Inter;color:#D6D1C8;padding:7px 0}
+.a .sw2{width:28px;height:16px;border-radius:99px;background:#3a3a40;position:relative}
+.a .sw2::after{content:"";position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:50%;background:#8d8d93}
+.a .sw2.on{background:var(--acc)}.a .sw2.on::after{left:14px;background:#fff}
+.a .flash{height:74px;background:var(--acc);display:flex;align-items:center;justify-content:center;color:#141416;
+  font:700 15px/1 'Archivo Narrow',sans-serif;letter-spacing:.01em}
+.a .entry{display:flex;gap:10px;padding:11px 16px;border-bottom:1px solid #26262a}
+.a .entry .cv{flex:0 0 34px;height:51px;padding:4px;border-radius:1px}
+.a .entry .cv i{font-size:6.5px}.a .entry .cv u{display:none}
+.a .pulse{width:6px;height:6px;border-radius:50%;background:var(--acc);box-shadow:0 0 0 3px rgba(224,87,79,.18)}
+
+/* ---------- B · Les Pages ---------- */
+.b{--bg:#F4EFE6;--fg:#1A1A1A;--fg2:#6B6B6B;--mut:#6B6B6B;--acc:#A8341E;--btnfg:#F4EFE6;
+  --surf:#FBF8F2;--surf2:#FBF8F2;--rule:#E5DFD3;--empt:#D6CFC0;--serif:'Playfair Display',Georgia,serif;
+  --sans:'Source Serif 4',Georgia,serif;--rbtn:2px;--rinput:2px;--chipbg:rgba(244,239,230,.9);font-family:var(--sans)}
+.b .mast{display:flex;justify-content:space-between;align-items:baseline;padding:2px 16px 0}
+.b .logo{font:600 12px/1 Inter;letter-spacing:.22em;text-transform:uppercase}
+.b .date{font:10px/1 'Source Serif 4',serif;color:var(--fg2);font-style:italic}
+.b .sec{display:flex;align-items:baseline;gap:10px;padding:12px 16px 8px}
+.b .sec .lbl{color:#8C8578;font:600 9px/1 Inter;letter-spacing:.16em}
+.b .sec .r{flex:1;height:1px;background:var(--rule)}
+.b .now{display:flex;gap:10px;padding:0 16px;align-items:flex-start}
+.b .now .cv{flex:0 0 52px;height:78px;padding:5px}
+.b .now .cv i{font-size:6px}.b .now .cv u{display:none}
+.b .now h3{font:600 15px/1.15 var(--serif);margin:0 0 2px}
+.b .now .au{font:italic 11px/1.3 'Source Serif 4',serif;color:var(--fg2)}
+.b .now .rd{margin-top:auto;font:600 10px/1 Inter;letter-spacing:.04em;color:var(--acc);text-transform:uppercase}
+.b .sugg{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:4px 16px 0}
+.b .sugg .cv{height:172px}
+.b .sugg h4{font:600 11.5px/1.2 var(--serif);margin:7px 0 1px}
+.b .sugg .au{font:italic 9.5px/1.2 'Source Serif 4',serif;color:var(--fg2)}
+.b .sugg .why{font:9px/1.25 'Source Serif 4',serif;color:#8C8578;margin-top:4px;border-top:1px solid var(--rule);padding-top:4px}
+.b .glass{position:absolute;left:0;right:0;bottom:0;padding:10px 16px 12px;background:rgba(244,239,230,.96);
+  border-top:1px solid var(--rule);backdrop-filter:blur(6px)}
+.b .field{display:flex;align-items:center;gap:8px;height:36px;border:1px solid #D8D0C1;background:#FBF8F2;
+  padding:0 10px;font:11px/1 'Source Serif 4',serif;color:#8C8578}
+.b .field .ico{display:flex;gap:8px;margin-left:auto;color:#5f5a51}
+.b .res{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:6px 16px}
+.b .res .cv{height:140px}
+.b .res h4{font:600 11.5px/1.2 var(--serif);margin:6px 0 0}
+.b .res .au{font:italic 9.5/1.2 'Source Serif 4',serif;color:var(--fg2)}
+.b .res .tag{display:inline-flex;align-items:center;gap:3px;margin-top:4px;font:600 7.5px/1 Inter;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--acc)}
+.b .fiche{overflow:hidden;flex:1}
+.b .fiche .cv{width:108px;height:162px;margin:12px auto 0;box-shadow:0 1px 0 #d8d0c1,0 14px 22px -14px rgba(0,0,0,.35)}
+.b .fiche h2{font:600 19px/1.12 var(--serif);text-align:center;margin:12px 24px 3px;letter-spacing:-.01em}
+.b .fiche .au{text-align:center;font:italic 11px/1.3 'Source Serif 4',serif;color:var(--fg2)}
+.b .fiche .meta{text-align:center;font:9px/1 Inter;letter-spacing:.08em;text-transform:uppercase;color:#8C8578;margin-top:9px}
+.b .quote{margin:14px 20px 0;padding-left:10px;border-left:2px solid var(--acc);font:italic 11.5px/1.5 'Source Serif 4',serif;color:#39332b}
+.b .mine{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);margin-top:14px}
+.b .spoil{margin:10px 16px 0;border:1px dashed #CFC7B8;padding:9px;text-align:center;font:9.5px/1.4 Inter;color:#6B6459}
+.b .actions{position:absolute;left:0;right:0;bottom:0;display:flex;gap:8px;padding:10px 16px 12px;background:rgba(244,239,230,.97);border-top:1px solid var(--rule)}
+.b .actions .btn{flex:1}
+.b .veil{position:absolute;inset:0;background:linear-gradient(180deg,rgba(26,26,26,.06),rgba(26,26,26,.42))}
+.b .sheet{position:absolute;left:0;right:0;bottom:0;top:196px;background:var(--surf);border-top:2px solid #1A1A1A;
+  padding:0 18px 14px;display:flex;flex-direction:column}
+.b .grab{width:34px;height:3px;background:#CFC7B8;margin:7px auto 12px}
+.b .stars{font-size:27px;gap:6px}
+.b .stars .s .t{display:block}
+.b .rate{display:flex;align-items:baseline;gap:8px;margin:10px 0 0}
+.b .rate b{font:600 26px/1 var(--serif)}
+.b .rate span{font:italic 10px/1 'Source Serif 4',serif;color:var(--fg2)}
+.b .ta{margin-top:8px;border:1px solid #D8D0C1;background:#F7F2E8;height:56px;padding:8px 9px;
+  font:italic 11px/1.4 'Source Serif 4',serif;color:#8C8578}
+.b .swrow{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--rule);font:11.5px/1 'Source Serif 4',serif}
+.b .box{width:14px;height:14px;border:1px solid #1A1A1A;position:relative}
+.b .box.on::after{content:"";position:absolute;inset:3px;background:var(--acc)}
+.b .chips{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.b .chip{font:9px/1 Inter;letter-spacing:.04em;border:1px solid #CFC7B8;padding:6px 8px;color:#4a443b}
+.b .chip.on{border-color:#1A1A1A;background:#1A1A1A;color:#F4EFE6}
+.b .pend{display:flex;align-items:center;gap:5px;font:9px/1 Inter;color:#8C8578;margin-top:auto}
+.b .jrn{padding:0 16px;flex:1;overflow:hidden}
+.b .jrn .day{display:grid;grid-template-columns:38px 1fr;gap:10px;padding:11px 0;border-bottom:1px solid var(--rule)}
+.b .jrn .d{font:600 8px/1.3 Inter;letter-spacing:.1em;text-transform:uppercase;color:#8C8578;padding-top:2px}
+.b .jrn h4{font:600 12.5px/1.2 var(--serif);margin:0 0 2px}
+.b .jrn p{font:10px/1.4 'Source Serif 4',serif;color:#5b544a;margin:3px 0 0}
+.b .jrn .cv{width:30px;height:45px;padding:3px;float:left;margin-right:9px}
+.b .jrn .cv i{font-size:5px}.b .jrn .cv u{display:none}
+.b .ok{display:flex;align-items:center;gap:8px;margin:10px 16px 0;padding:8px 10px;border:1px solid var(--rule);background:#FBF8F2}
+.b .ok b{font:600 11px/1.2 var(--serif)}
+.b .ok span{font:9px/1.3 Inter;color:#8C8578}
+
+/* ---------- C · Sillage ---------- */
+.c{--bg:#141118;--fg:#F4F1EA;--fg2:#9B94A6;--mut:#9B94A6;--acc:#FF8A65;--btnfg:#1A1116;
+  --surf:#221B2A;--surf2:#1C1722;--rule:#2E2637;--empt:#453B52;--serif:Manrope,system-ui,sans-serif;
+  --sans:Inter,sans-serif;--rbtn:10px;--rinput:10px;--chipbg:rgba(14,11,18,.85);font-family:var(--sans)}
+.c .h1{font:800 19px/1.1 Manrope,sans-serif;letter-spacing:-.02em}
+.c .h2{font:800 12px/1.2 Manrope,sans-serif;letter-spacing:-.01em}
+.c .eyebrow{font:600 8px/1 Inter;letter-spacing:.18em;text-transform:uppercase;color:var(--fg2)}
+.c .scroll{flex:1;overflow:hidden}
+.c .resume{margin:0 14px;background:var(--surf);border-radius:12px;padding:10px;display:flex;gap:10px;align-items:center}
+.c .resume .cv{flex:0 0 40px;height:60px;padding:4px;border-radius:3px}
+.c .resume .cv i{font-size:5.5px}.c .resume .cv u{display:none}
+.c .bar{height:3px;background:#3A3044;border-radius:2px;margin-top:7px;position:relative}
+.c .bar i{position:absolute;inset:0 55% 0 0;background:var(--acc);border-radius:2px}
+.c .probe{display:flex;gap:7px;padding:0 14px;align-items:flex-end}
+.c .probe .p{flex:0 0 74px;transition:.2s}
+.c .probe .p .cv{height:92px;border-radius:4px;padding:6px}
+.c .probe .p .cv i{font-size:8px}
+.c .probe .p.mid{flex:0 0 96px;transform:translateY(-5px)}
+.c .probe .p.mid .cv{height:118px;box-shadow:0 10px 20px -8px rgba(0,0,0,.8)}
+.c .probe .why{font:8px/1.25 Inter;color:var(--fg2);margin-top:5px}
+.c .probe .why b{color:#D9D2C6;font-weight:600}
+.c .moods{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:0 14px}
+.c .mood{border:1px solid var(--rule);border-radius:8px;padding:7px 8px;font:600 9px/1.2 Inter;color:#CFC6D6;background:var(--surf2)}
+.c .mood span{display:block;font:8px/1.3 Inter;color:var(--fg2);margin-top:2px;font-weight:400}
+.c .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;padding:0 14px}
+.c .grid3 .cv{height:96px;border-radius:3px;padding:5px}
+.c .grid3 .cv i{font-size:7px}
+.c .grid3 .meta{font:8px/1.2 Inter;color:var(--fg2);margin-top:3px}
+.c .tabsb{display:flex;justify-content:space-around;height:48px;border-top:1px solid var(--rule);
+  align-items:center;font:8px/1 Inter;color:var(--mut);margin-top:auto;padding-bottom:5px}
+.c .tabsb .on{color:var(--acc)}
+.c .tabsb b{display:block;font:400 13px/1 Inter;margin-bottom:3px;text-align:center}
+.c .fiche .top{display:flex;gap:12px;padding:12px 14px 0}
+.c .fiche .cv{flex:0 0 86px;height:129px;border-radius:4px;padding:6px}
+.c .fiche .cv i{font-size:8px}
+.c .fiche .stat2{font:700 11px/1.2 JetBrains Mono,monospace;color:#D9D2C6}
+.c .fiche .kv{display:flex;justify-content:space-between;font:9px/1.6 Inter;color:var(--fg2);border-bottom:1px solid var(--rule);padding:3px 0}
+.c .fiche .kv b{color:#E7E1D7;font-weight:500;font-family:'JetBrains Mono',monospace;font-size:9px}
+.c .card{margin:9px 14px 0;background:var(--surf2);border:1px solid var(--rule);border-radius:10px;padding:9px 10px}
+.c .segs{display:flex;gap:3px;padding:0 16px}
+.c .segs i{flex:1;height:26px;border-radius:3px;background:#2A2233;display:block}
+.c .segs i.on{background:var(--acc)}
+.c .segs i.half{background:linear-gradient(90deg,var(--acc) 50%,#2A2233 50%)}
+.c .num{font:700 34px/1 'JetBrains Mono',monospace;letter-spacing:-.03em}
+.c .chipline{display:flex;gap:5px;flex-wrap:wrap}
+.c .cl{font:9px/1 Inter;padding:5px 7px;border-radius:99px;border:1px solid var(--rule);color:#CFC6D6}
+.c .cl.on{background:var(--acc);color:#241318;border-color:var(--acc);font-weight:600}
+.c .tl{padding:0 14px}
+.c .tl .row{display:flex;gap:9px;padding:8px 0;border-bottom:1px solid var(--rule);align-items:center}
+.c .tl .cv{flex:0 0 26px;height:39px;padding:3px;border-radius:2px}
+.c .tl .cv i{font-size:4.5px}.c .tl .cv u{display:none}
+.c .tl .t{font:600 10px/1.2 Inter;color:#EDE7DD}
+.c .tl .m{font:8.5px/1.3 Inter;color:var(--fg2)}
+.c .tl .r{margin-left:auto;font:700 9px/1 'JetBrains Mono',monospace;color:var(--acc)}
+.c .kpi{display:flex;gap:7px;padding:0 14px}
+.c .kpi div{flex:1;background:var(--surf);border-radius:8px;padding:7px 8px}
+.c .kpi b{display:block;font:700 13px/1 'JetBrains Mono',monospace}
+.c .kpi span{font:8px/1.2 Inter;color:var(--fg2)}
+.c .sync{display:flex;align-items:center;gap:6px;font:8.5px/1 Inter;color:var(--acc);margin:9px 14px 0;
+  background:rgba(255,138,101,.09);border:1px solid rgba(255,138,101,.25);border-radius:6px;padding:7px 8px}
+.a .meta h2{font-family:'Archivo Narrow',Impact,sans-serif;font-size:26px;font-weight:700;letter-spacing:0}
+.b .meta h2{font-family:'Playfair Display',Georgia,serif;font-size:25px;font-weight:600}
+.c .meta h2{font-family:Manrope,system-ui,sans-serif;font-size:24px;font-weight:800;letter-spacing:-.02em}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="brand">Spine<span>Goodreads, refait — 3 directions</span></div>
+  <div class="nav" role="tablist">
+    <button role="tab" data-target="a">A · Pellicule</button>
+    <button role="tab" data-target="b" aria-selected="true">B · Les Pages</button>
+    <button role="tab" data-target="c">C · Sillage</button>
+  </div>
+  <div class="note">Maquettes de la phase 0. Les ratios de contraste affichés sont <b>mesurés</b> (<code>lab/contrast.py</code>), pas estimés par un modèle. Faites défiler chaque rangée pour voir les 5 écrans.</div>
+</div>
+<!-- ============ A · PELLICULE ============ -->
+<section class="dir a" id="a">
+  <div class="meta">
+    <div class="kicker">Direction A</div>
+    <h2>« Pellicule »</h2>
+    <p>Le livre comme affiche de film : couvertures plein cadre, fond nuit, typographie condensée. Noter devient un réflexe, trouver se fait par l'image.</p>
+    <div class="score">Critique <b>22</b>/30 · la plus rapide à noter</div>
+    <ul class="pts">
+      <li>Tap gauche = demi-étoile, tap droit = étoile entière : tenu en 2 gestes</li>
+      <li>Bandeau horizontal de couvertures, motif de reco sous chaque titre</li>
+      <li>Faiblesse : identité proche de MUBI, duotone coûteux à implémenter</li>
+    </ul>
+    <div class="sw"><i style="background:#1A1A1E"></i><i style="background:#2C2C30"></i><i style="background:#F5F0E8"></i><i style="background:#E0574F"></i></div>
+    <div class="tok"><b>Archivo Narrow</b> + Inter<br>nuit #1A1A1E · accent #E0574F <b>4,66:1</b><br>grille 4 col · 16 pt · rayons 4–8 pt</div>
+  </div>
+  <div class="railwrap">
+    <div class="railtop"><em>5 écrans — faites défiler</em><div class="railbtn"><button data-scroll="-1" aria-label="Précédent">‹</button><button data-scroll="1" aria-label="Suivant">›</button></div></div>
+    <div class="rail">
+
+      <!-- A1 -->
+      <div class="phone a" data-cap="1 · Découverte">
+        <div class="stat"><i>9:41</i><i>▮▮▮ ··· <u></u></i></div>
+        <div class="sc">
+          <div style="padding:8px 16px 6px;display:flex;justify-content:space-between;align-items:center">
+            <div class="eyebrow" style="letter-spacing:.26em">Spine</div>
+            <span class="pulse"></span>
+          </div>
+          <div class="hero" style="height:198px">
+            <div class="cv c1"><i>La Route</i><u>Cormac McCarthy</u></div>
+            <div class="shade"></div>
+            <div class="txt">
+              <div class="eyebrow" style="color:#c9c3ba">En cours · page 142 / 312</div>
+              <h1 class="h1" style="margin:5px 0 1px">La Route</h1>
+              <em style="font-style:normal;font:11px/1.2 Inter;color:#cfc9c0">Cormac McCarthy</em>
+              <div class="prog"><i></i></div>
+            </div>
+          </div>
+          <div style="padding:12px 16px 0"><div class="btn acc">Continuer la lecture</div></div>
+          <div class="tline" style="margin-top:16px"><span class="eyebrow">Pour vous</span><span class="eyebrow" style="color:#5d5d63">3 sur 12</span></div>
+          <div class="filmstrip" style="padding:0 16px;margin-top:9px">
+            <div class="fs">
+              <div class="cv c4"><i>Le Nom du Vent</i><u>P. Rothfuss</u></div>
+              <div class="grad"></div>
+              <div class="cap2"><b>Le Nom du Vent</b><em>parce que vous avez noté<br>L'Étranger 4,5★</em></div>
+            </div>
+            <div class="fs" style="opacity:.55">
+              <div class="cv c2"><i>Siddhartha</i><u>H. Hesse</u></div>
+              <div class="grad"></div>
+            </div>
+          </div>
+          <div class="tabbar"><div class="on"><b>◉</b>Découvrir</div><div><b>⌕</b>Chercher</div><div><b>≡</b>Journal</div></div>
+        </div>
+      </div>
+
+      <!-- A2 -->
+      <div class="phone a" data-cap="2 · Recherche">
+        <div class="stat"><i>9:41</i><i>▮▮▮ ··· <u></u></i></div>
+        <div class="sc">
+          <div style="padding:10px 16px 12px">
+            <h1 class="h1">Trouver un livre</h1>
+            <div class="search" style="margin-top:10px">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+              <span style="color:#F5F0E8">la route</span>
+              <span style="margin-left:auto;display:flex;gap:8px;align-items:center;color:#cfc9c0">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 8V5h3M20 8V5h-3M4 16v3h3M20 16v3h-3"/><path d="M3 12h18" stroke-dasharray="2 2"/></svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="6" width="18" height="13" rx="2"/><circle cx="12" cy="12.5" r="3"/></svg>
+              </span>
+            </div>
+            <div class="note" style="font:10px/1.4 Inter;color:#9A9A9E;margin-top:8px">4 résultats · livre dédoublonné, éditions sur la fiche</div>
+          </div>
+          <div class="grid2">
+            <div><div class="cv c6" style="position:relative"><i>La Route</i><u>C. McCarthy</u><span class="badge" style="position:absolute;top:6px;right:6px">Lu</span></div>
+              <div style="font:600 11px/1.25 Inter;margin-top:6px">La Route</div>
+              <div class="note" style="font:9.5px/1.3 Inter;color:#9A9A9E">Cormac McCarthy</div>
+              <div class="stars" data-v="4.5" style="margin-top:3px;font-size:10px"></div></div>
+            <div><div class="cv c2"><i>Siddhartha</i><u>H. Hesse</u></div>
+              <div style="font:600 11px/1.25 Inter;margin-top:6px">Siddhartha</div>
+              <div class="note" style="font:9.5px/1.3 Inter;color:#9A9A9E">Hermann Hesse</div></div>
+            <div><div class="cv c3"><i>Les Furtifs</i><u>A. Damasio</u></div>
+              <div style="font:600 11px/1.25 Inter;margin-top:6px">Les Furtifs</div>
+              <div class="note" style="font:9.5px/1.3 Inter;color:#9A9A9E">Alain Damasio</div></div>
+            <div><div class="cv c7"><i>Le Nom du Vent</i><u>P. Rothfuss</u></div>
+              <div style="font:600 11px/1.25 Inter;margin-top:6px">Le Nom du Vent</div>
+              <div class="note" style="font:9.5px/1.3 Inter;color:#9A9A9E">Patrick Rothfuss</div></div>
+          </div>
+          <div class="tabbar"><div><b>◉</b>Découvrir</div><div class="on"><b>⌕</b>Chercher</div><div><b>≡</b>Journal</div></div>
+        </div>
+      </div>
+
+      <!-- A3 -->
+      <div class="phone a" data-cap="3 · Fiche livre">
+        <div class="stat"><i>9:41</i><i>▮▮▮ ··· <u></u></i></div>
+        <div class="sc">
+          <div class="hero" style="height:250px;flex:0 0 auto">
+            <div class="cv c4"><i>Le Nom du Vent</i><u>Patrick Rothfuss</u></div>
+            <div class="shade"></div>
+            <div class="txt">
+              <div class="eyebrow" style="color:#c9c3ba">Chronique du tueur de roi · 1</div>
+              <h1 class="h1" style="margin:5px 0 2px">Le Nom du Vent</h1>
+              <em style="font-style:normal;font:11px/1.2 Inter;color:#cfc9c0">Patrick Rothfuss</em>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid #26262a">
+            <div class="big" style="font-size:30px">4,2</div>
+            <div><div class="stars" data-v="4" style="font-size:12px"></div>
+              <div class="note" style="font:9.5px/1.4 Inter;color:#9A9A9E;margin-top:2px">1 204 lecteurs · 87 avis</div></div>
+          </div>
+          <div style="padding:12px 16px 0">
+            <div class="eyebrow">Extrait de l'avis le plus utile</div>
+            <p style="font:italic 12px/1.5 'Source Serif 4',serif;color:#cfc9c0;margin:7px 0 0">« Un récit d'apprentissage qui prend son temps, et c'est exactement ce qu'on lui demande. »</p>
+          </div>
+          <div class="note" style="font:10px/1.5 Inter;color:#9A9A9E;padding:12px 16px 0">Bragelonne · 2009 · 662 p. · Fantasy</div>
+          <div style="display:flex;gap:6px;padding:10px 16px 0">
+            <span style="font:600 8px/1 Inter;letter-spacing:.06em;text-transform:uppercase;border:1px solid #35353b;border-radius:3px;padding:5px 6px;color:#9A9A9E">Fantasy</span>
+            <span style="font:600 8px/1 Inter;letter-spacing:.06em;text-transform:uppercase;border:1px solid #35353b;border-radius:3px;padding:5px 6px;color:#9A9A9E">662 pages</span>
+            <span style="font:600 8px/1 Inter;letter-spacing:.06em;text-transform:uppercase;border:1px solid #35353b;border-radius:3px;padding:5px 6px;color:#9A9A9E">Série · 1/3</span>
+          </div>
+          <div style="margin:14px 16px 0;padding:11px;background:#232327;border-radius:4px">
+            <div class="eyebrow">Dans vos étagères</div>
+            <div class="note" style="font:10.5px/1.5 Inter;color:#cfc9c0;margin-top:4px">Lu le 12 nov. 2024 · 4,5★ · ajouté à « À relire »</div>
+          </div>
+          <div style="margin-top:auto;padding:12px 16px 14px;border-top:1px solid #26262a;display:flex;gap:8px">
+            <div class="btn acc" style="flex:1">Noter</div>
+            <div class="btn ghost" style="flex:0 0 96px">Ajouter</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- A4 -->
+      <div class="phone a" data-cap="4 · Feuille de notation">
+        <div class="stat"><i>9:41</i><i>▮▮▮ ··· <u></u></i></div>
+        <div class="sc">
+          <div style="position:absolute;inset:0;background:linear-gradient(180deg,#2a1f1c,#1A1A1E)"></div>
+          <div class="sheet">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div style="display:flex;gap:9px;align-items:center">
+                <div class="cv c4" style="width:30px;height:45px;padding:0"></div>
+                <div><div style="font:600 11px/1.2 Inter">Le Nom du Vent</div><div class="note" style="font:9px/1.2 Inter;color:#9A9A9E">Patrick Rothfuss</div></div>
+              </div>
+              <div style="font-size:15px;color:#8d8d93">✕</div>
+            </div>
+            <div style="display:flex;align-items:flex-end;gap:10px;margin-top:16px">
+              <div class="big">4,5</div>
+              <div class="stars" data-v="4.5" style="font-size:15px;margin-bottom:9px"></div>
+            </div>
+            <div class="note" style="font:9.5px/1.3 Inter;color:#9A9A9E;margin-top:6px">Touchez la moitié gauche ou droite d'une étoile</div>
+            <div style="margin-top:12px;border:1px solid #35353b;border-radius:4px;padding:9px;height:62px;font:11px/1.45 Inter;color:#6f6f76">Votre avis (optionnel)</div>
+            <div class="switchrow"><span>Contient un spoiler</span><span class="sw2"></span></div>
+            <div class="switchrow" style="padding-top:0"><span>Privé</span><span class="sw2"></span></div>
+            <div class="seg" style="margin-top:10px"><span class="on">Lu</span><span>En cours</span><span>Abandonné</span><span>Relire</span></div>
+            <div class="btn acc" style="margin-top:auto">Valider · lu le 12 nov.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- A5 -->
+      <div class="phone a" data-cap="5 · Journal">
+        <div class="stat"><i>9:41</i><i>▮▮▮ ··· <u></u></i></div>
+        <div class="sc">
+          <div class="flash">Note enregistrée</div>
+          <div style="display:flex;gap:10px;align-items:center;padding:14px 16px;border-bottom:1px solid #26262a">
+            <div class="cv c4" style="width:38px;height:57px;padding:4px"><i style="font-size:6px">N.</i><u></u></div>
+            <div style="flex:1">
+              <div style="font:700 14px/1.15 'Archivo Narrow',sans-serif">Le Nom du Vent</div>
+              <div class="stars" data-v="4.5" style="font-size:11px;margin-top:3px"></div>
+              <div class="note" style="font:9.5px/1.3 Inter;color:#9A9A9E;margin-top:3px">12 nov. 2024, 18:42</div>
+            </div>
+          </div>
+          <div style="padding:14px 16px 6px" class="eyebrow">Journal · novembre</div>
+          <div class="entry"><div class="cv c4"><i>N.</i></div><div><div style="font:600 11px/1.2 Inter">Noté 4,5★</div><div class="note" style="font:9px/1.3 Inter;color:#9A9A9E">Le Nom du Vent</div></div></div>
+          <div class="entry"><div class="cv c6"><i>L.R.</i></div><div><div style="font:600 11px/1.2 Inter">Noté 3,0★</div><div class="note" style="font:9px/1.3 Inter;color:#9A9A9E">La Route · 8 nov.</div></div></div>
+          <div class="entry"><div class="cv c2"><i>S.</i></div><div><div style="font:600 11px/1.2 Inter">Abandonné p. 82</div><div class="note" style="font:9px/1.3 Inter;color:#9A9A9E">Siddhartha · 2 nov.</div></div></div>
+          <div style="margin-top:auto;padding:12px 16px 14px;display:flex;gap:8px">
+            <div class="btn ghost" style="flex:1">Ajouter un avis</div>
+            <div class="btn acc" style="flex:1">Voir le journal</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+<!-- ============ B · LES PAGES ============ -->
+<section class="dir b on" id="b">
+  <div class="meta">
+    <div class="kicker">Direction B · recommandée</div>
+    <h2>« Les Pages »</h2>
+    <p>Le carnet de lecture : papier crème, serif éditorial, filets fins, annotations en marge. La note s'inscrit dans la page comme une trace d'encre.</p>
+    <div class="score pick">Recommandée <b>23</b>/30 · seule identité vraiment propre</div>
+    <ul class="pts">
+      <li>Aucune ressemblance avec Letterboxd, MUBI ou Goodreads : le concept est le carnet, pas un habillage</li>
+      <li>Faisable en un sprint : rayons 0–4 pt, zéro ombre, zéro extraction de couleur</li>
+      <li>Emprunte à A la demi-étoile au tap, à C le fallback de recherche pré-rempli</li>
+    </ul>
+    <div class="sw"><i style="background:#F4EFE6"></i><i style="background:#E5DFD3"></i><i style="background:#1A1A1A"></i><i style="background:#A8341E"></i></div>
+    <div class="tok"><b>Playfair Display</b> + Source Serif 4<br>papier #F4EFE6 · encre #1A1A1A <b>15,2:1</b><br>accent #A8341E <b>5,78:1</b> · grille 2 col · 16 pt</div>
+  </div>
+  <div class="railwrap">
+    <div class="railtop"><em>5 écrans — faites défiler</em><div class="railbtn"><button data-scroll="-1" aria-label="Précédent">‹</button><button data-scroll="1" aria-label="Suivant">›</button></div></div>
+    <div class="rail">
+
+      <!-- B1 -->
+      <div class="phone b" data-cap="1 · Découverte">
+        <div class="stat"><i>9:41</i><i>▮▮▮ ··· <u></u></i></div>
+        <div class="sc">
+          <div class="mast" style="padding-top:6px"><span class="logo">Spine</span><span class="date">mardi 25 novembre</span></div>
+          <div class="sec"><span class="lbl">En cours</span><span class="r"></span></div>
+          <div class="now">
+            <div class="cv c1"><i>La Route</i><u>C. McCarthy</u></div>
+            <div style="display:flex;flex-direction:column;align-self:stretch">
+              <h3>La Route</h3>
+              <div class="au">Cormac McCarthy</div>
+              <div class="au" style="color:#8C8578;margin-top:6px">page 142 sur 312 · 46 %</div>
+              <div class="rd" style="margin-top:auto">Reprendre →</div>
+            </div>
+          </div>
+          <div class="sec" style="padding-top:18px"><span class="lbl">Suggestions</span><span class="r"></span><span class="lbl" style="color:#B3AA9A">3 / 12</span></div>
+          <div class="sugg">
+            <div>
+              <div class="cv c4"><i>Le Nom du Vent</i><u>P. Rothfuss</u></div>
+              <h4>Le Nom du Vent</h4>
+              <div class="au">Patrick Rothfuss</div>
+              <div class="why">parce que vous avez noté <i>L'Étranger</i> 4,5★</div>
+            </div>
+            <div>
+              <div class="cv c7"><i>Siddhartha</i><u>H. Hesse</u></div>
+              <h4>Siddhartha</h4>
+              <div class="au">Hermann Hesse</div>
+              <div class="why">parce que vous avez noté <i>L'Étranger</i> 4,5★</div>
+            </div>
+          </div>
+          <div class="sec" style="padding-top:16px"><span class="lbl">Vos étagères</span><span class="r"></span><span class="lbl" style="color:#B3AA9A">23 livres</span></div>
+          <div style="display:flex;gap:8px;padding:0 16px">
+            <div class="cv c6" style="width:52px;height:78px;padding:5px"><i style="font-size:5.5px">Dune</i></div>
+            <div class="cv c5" style="width:52px;height:78px;padding:5px"><i style="font-size:5.5px">S.</i></div>
+            <div class="cv c3" style="width:52px;height:78px;padding:5px"><i style="font-size:5.5px">F.</i></div>
+            <div class="cv c2" style="width:52px;height:78px;padding:5px"><i style="font-size:5.5px">S.</i></div>
+            <div style="width:52px;height:78px;border:1px dashed #CFC7B8;display:flex;align-items:center;justify-content:center;font:9px/1 Inter;color:#8C8578">+18</div>
+          </div>
+          <div class="glass"><div class="field">Rechercher un titre, un auteur
+            <span class="ico">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 8V5h3M20 8V5h-3M4 16v3h3M20 16v3h-3"/><path d="M3 12h18" stroke-dasharray="2 2"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="6" width="18" height="13" rx="2"/><circle cx="12" cy="12.5" r="3"/></svg>
+            </span></div></div>
+        </div>
+      </div>
+
+      <!-- B2 -->
+      <div class="phone b" data-cap="2 · Recherche">
+        <div class="stat"><i>9:41</i><i>▮▮▮ ··· <u></u></i></div>
+        <div class="sc">
+          <div style="padding:6px 16px 0;display:flex;align-items:center;gap:10px">
+            <span style="font-size:15px;color:#4a443b">‹</span>
+            <div class="field" style="flex:1">la route
+              <span class="ico">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 8V5h3M20 8V5h-3M4 16v3h3M20 16v3h-3"/><path d="M3 12h18" stroke-dasharray="2 2"/></svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="6" width="18" height="13" rx="2"/><circle cx="12" cy="12.5" r="3"/></svg>
+              </span></div>
+          </div>
+          <div class="sec" style="padding-top:14px"><span class="lbl">4 livres</span><span class="r"></span><span class="lbl" style="color:#B3AA9A">tri : pertinence</span></div>
+          <div class="res">
+            <div><div class="cv c6"><i>La Route</i><u>C. McCarthy</u></div><h4>La Route</h4><div class="au">Cormac McCarthy</div>
+              <div class="tag"><svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><path d="M20 6L9 17l-5-5"/></svg>déjà noté 4,5★</div></div>
+            <div><div class="cv c2"><i>Siddhartha</i><u>H. Hesse</u></div><h4>Siddhartha</h4><div class="au">Hermann Hesse</div></div>
+            <div><div class="cv c3"><i>Les Furtifs</i><u>A. Damasio</u></div><h4>Les Furtifs</h4><div class="au">Alain Damasio</div></div>
+            <div><div class="cv c4"><i>Le Nom du Vent</i><u>P. Rothfuss</u></div><h4>Le Nom du Vent</h4><div class="au">Patrick Rothfuss</div></div>
+          </div>
+          <div style="margin:12px 16px 0;padding:9px 10px;background:#FBF8F2;border:1px solid var(--rule)">
+            <div class="lbl" style="color:#8C8578">Rien trouvé ?</div>
+            <div style="font:italic 11px/1.4 'Source Serif 4',serif;margin-top:3px">Essayez : <span style="color:var(--acc)">Le Nom du Vent</span></div>
+          </div>
+          <div style="margin-top:auto;padding:10px 16px 12px;border-top:1px solid var(--rule);font:9.5px/1.4 Inter;color:#8C8578">
+            Le scan s'ouvre directement depuis la barre : aucun écran intermédiaire.
+          </div>
+        </div>
+      </div>
+
+      <!-- B3 -->
+      <div class="phone b" data-cap="3 · Fiche livre">
+        <div class="stat"><i>9:41</i><i>▮▮▮ ··· <u></u></i></div>
+        <div class="sc">
+          <div class="fiche">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 16px 0">
+              <span style="font-size:15px;color:#4a443b">‹</span>
+              <span class="lbl" style="color:#B3AA9A">Partager</span>
+            </div>
+            <div class="cv c4"><i>Le Nom du Vent</i><u>Patrick Rothfuss</u></div>
+            <h2>Le Nom du Vent</h2>
+            <div class="au">Patrick Rothfuss</div>
+            <div class="meta">Bragelonne · 2009 · 662 p.</div>
+            <div class="quote">« Un récit d'apprentissage qui prend son temps, et c'est exactement ce qu'on lui demande. »</div>
+            <div class="mine">
+              <div>
+                <div class="lbl" style="color:#8C8578">Votre note</div>
+                <div style="display:flex;align-items:center;gap:7px;margin-top:4px">
+                  <span class="stars" data-v="4.5" style="font-size:14px"></span>
+                  <span style="font:600 12px/1 'Source Serif 4',serif">4,5</span>
+                </div>
+              </div>
+              <div style="text-align:right;font:italic 9.5px/1.4 'Source Serif 4',serif;color:#8C8578">noté le<br>12 nov. 2024</div>
+            </div>
+            <div class="spoil">Avis masqué — contient un spoiler.<br><b style="color:#1A1A1A">Afficher malgré tout</b></div>
+            <div style="padding:14px 16px 0">
+              <div class="lbl" style="color:#8C8578">L'histoire</div>
+              <p style="font:11px/1.5 'Source Serif 4',serif;color:#4a443b;margin:5px 0 0">Kvothe raconte sa vie en trois jours : l'enfance, l'université, le nom du vent.</p>
+            </div>
+          </div>
+          <div class="actions"><div class="btn ghost">Ajouter</div><div class="btn acc">Noter</div></div>
+        </div>
+      </div>
+
+      <!-- B4 -->
+      <div class="phone b" data-cap="4 · Feuille de notation">
+        <div class="stat"><i>9:41</i><i>▮▮▮ ··· <u></u></i></div>
+        <div class="sc">
+          <div style="position:absolute;inset:0;background:#F4EFE6"></div>
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;padding-top:18px">
+            <div class="cv c4" style="width:96px;height:144px"><i>Le Nom du Vent</i><u>P. Rothfuss</u></div>
+          </div>
+          <div class="veil"></div>
+          <div class="sheet">
+            <div class="grab"></div>
+            <div class="lbl" style="color:#8C8578">Noter ce livre</div>
+            <div style="font:600 16px/1.2 var(--serif);margin-top:4px">Le Nom du Vent</div>
+            <div style="display:flex;align-items:center;gap:12px;margin-top:12px">
+              <span class="stars" data-v="4.5" style="font-size:27px;gap:4px"></span>
+            </div>
+            <div class="rate"><b>4,5</b><span>sur 5 · le 12 novembre</span></div>
+            <div class="ta">Écrire une note (optionnel)</div>
+            <div class="swrow"><span>Contient un spoiler</span><span class="box on"></span></div>
+            <div class="swrow"><span>Privé — visible par moi seul</span><span class="box"></span></div>
+            <div class="chips"><span class="chip on">Lu</span><span class="chip">Relire</span><span class="chip">Abandonné</span></div>
+            <div class="pend">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+              hors ligne : la note partira au retour du réseau
+            </div>
+            <div class="btn acc" style="margin-top:8px">Valider</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- B5 -->
+      <div class="phone b" data-cap="5 · Journal">
+        <div class="stat"><i>9:41</i><i>▮▮▮ ··· <u></u></i></div>
+        <div class="sc">
+          <div style="padding:6px 16px 0;display:flex;justify-content:space-between;align-items:baseline">
+            <span style="font:600 20px/1 var(--serif);letter-spacing:-.01em">Journal</span>
+            <span class="date">novembre 2024</span>
+          </div>
+          <div class="ok">
+            <div class="cv c4" style="width:26px;height:39px;padding:3px"><i style="font-size:4.5px">N.</i><u></u></div>
+            <div><b>Noté 4,5★ — Le Nom du Vent</b><br><span>12 nov. 2024, 18:42 · enregistré</span></div>
+          </div>
+          <div class="jrn" style="margin-top:6px">
+            <div class="day"><div class="d">12<br>NOV</div>
+              <div><div class="cv c4"><i>N.</i></div><h4>Le Nom du Vent</h4>
+                <span class="stars" data-v="4.5" style="font-size:10px"></span>
+                <p>« Le genre de livre qu'on referme en cherchant une fenêtre. »</p></div></div>
+            <div class="day"><div class="d">08<br>NOV</div>
+              <div><div class="cv c6"><i>L.R.</i></div><h4>La Route</h4>
+                <span class="stars" data-v="3" style="font-size:10px"></span>
+                <p>Lu en trois jours, la fin m'a laissé en suspens.</p></div></div>
+            <div class="day"><div class="d">02<br>NOV</div>
+              <div><div class="cv c2"><i>S.</i></div><h4>Siddhartha</h4>
+                <span class="lbl" style="color:var(--acc);font-size:8px">Abandonné p. 82</span>
+                <p style="color:#8C8578">Repris plus tard, peut-être.</p></div></div>
+          </div>
+          <div style="margin-top:auto;padding:10px 16px 12px;border-top:1px solid var(--rule);display:flex;justify-content:space-between;align-items:center">
+            <span class="pend" style="margin:0">1 note en attente de synchronisation</span>
+            <span style="font:600 10px/1 Inter;letter-spacing:.04em;color:var(--acc);text-transform:uppercase">Ajouter</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+<!-- ============ C · SILLAGE ============ -->
+<section class="dir c" id="c">
+  <div class="meta">
+    <div class="kicker">Direction C</div>
+    <h2>« Sillage »</h2>
+    <p>La lecture comme profil de goût : dense, rapide, recommandations expliquées, humeurs. L'utilisateur voit pourquoi on lui propose un livre.</p>
+    <div class="score">Critique <b>21</b>/30 · meilleure découverte, livraison risquée</div>
+    <ul class="pts">
+      <li>Motif de reco collé à la tuile : on comprend la suggestion sans ouvrir un détail</li>
+      <li>Fallback de recherche pré-rempli, le seul qui tienne vraiment la story 5</li>
+      <li>Faiblesse : fleurte avec Spotify/Linear, et une feuille modale en « L »</li>
+    </ul>
+    <div class="sw"><i style="background:#141118"></i><i style="background:#221B2A"></i><i style="background:#F4F1EA"></i><i style="background:#FF8A65"></i></div>
+    <div class="tok"><b>Manrope</b> + Inter + JetBrains Mono<br>encre nuit #141118 · accent #FF8A65 <b>8,08:1</b><br>grille 3 col · 4 pt · rayons 8–12 pt</div>
+  </div>
+  <div class="railwrap">
+    <div class="railtop"><em>5 écrans — faites défiler</em><div class="railbtn"><button data-scroll="-1" aria-label="Précédent">‹</button><button data-scroll="1" aria-label="Suivant">›</button></div></div>
+    <div class="rail">
+
+      <!-- C1 -->
+      <div class="phone c" data-cap="1 · Découverte">
+        <div class="stat"><i>9:41</i><i>▮▮▮ ··· <u></u></i></div>
+        <div class="sc">
+          <div style="padding:8px 14px 10px;display:flex;justify-content:space-between;align-items:center">
+            <div class="h1">Spine</div>
+            <div style="width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#FF8A65,#7C4DFF)"></div>
+          </div>
+          <div class="eyebrow" style="padding:0 14px 6px">Reprendre</div>
+          <div class="resume">
+            <div class="cv c1"><i>La Route</i><u></u></div>
+            <div style="flex:1">
+              <div style="font:600 11.5px/1.2 Inter">La Route</div>
+              <div style="font:8.5px/1.3 Inter;color:#9B94A6">page 142 / 312</div>
+              <div class="bar"><i></i></div>
+            </div>
+            <div style="width:26px;height:26px;border-radius:50%;background:var(--acc);display:flex;align-items:center;justify-content:center;color:#241318;font-size:11px">▶</div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;padding:14px 14px 8px">
+            <span class="eyebrow">Sonde de goût</span><span style="font:8.5px/1 Inter;color:#6f6479">parce que vous avez aimé</span>
+          </div>
+          <div class="probe">
+            <div class="p"><div class="cv c2"><i>Siddhartha</i></div><div class="why">H. Hesse</div></div>
+            <div class="p mid"><div class="cv c4"><i>Le Nom du Vent</i></div><div class="why">parce que <b>L'Étranger</b> 4,5★</div></div>
+            <div class="p"><div class="cv c7"><i>Les Furtifs</i></div><div class="why">A. Damasio</div></div>
+          </div>
+          <div class="eyebrow" style="padding:16px 14px 6px">Par humeur</div>
+          <div class="moods">
+            <div class="mood">Mélancolique<span>12 livres</span></div>
+            <div class="mood">Trépidant<span>8 livres</span></div>
+            <div class="mood">Court<span>moins de 200 p.</span></div>
+            <div class="mood">À relire<span>3 livres</span></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;padding:16px 14px 8px">
+            <span class="eyebrow">Nouveautés</span><span style="font:8.5px/1 Inter;color:#6f6479">voir tout</span>
+          </div>
+          <div class="grid3">
+            <div><div class="cv c5"><i>Dune</i></div><div class="meta">Herbert</div></div>
+            <div><div class="cv c6"><i>La Horde</i></div><div class="meta">Damasio</div></div>
+            <div><div class="cv c2"><i>L'Étranger</i></div><div class="meta">Camus</div></div>
+          </div>
+          <div class="tabsb"><div class="on"><b>◉</b>Découvrir</div><div><b>⌕</b>Chercher</div><div><b>≡</b>Journal</div></div>
+        </div>
+      </div>
+
+      <!-- C2 -->
+      <div class="phone c" data-cap="2 · Recherche">
+        <div class="stat"><i>9:41</i><i>▮▮▮ ··· <u></u></i></div>
+        <div class="sc">
+          <div style="padding:8px 14px 0">
+            <div class="h1" style="font-size:16px">Chercher</div>
+            <div class="search" style="margin-top:9px;border-radius:10px">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+              <span style="color:#F4F1EA">le nom du vent</span>
+              <span style="margin-left:auto;display:flex;gap:7px">
+                <span class="cl" style="padding:4px 6px">scan</span><span class="cl" style="padding:4px 6px">photo</span>
+              </span>
+            </div>
+            <div style="display:flex;gap:5px;margin-top:9px;overflow:hidden">
+              <span class="cl on">Tous</span><span class="cl">Déjà lus</span><span class="cl">Non lus</span><span class="cl">&lt; 300 p.</span>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:12px 14px 8px">
+            <span class="eyebrow">6 résultats</span><span style="font:8.5px/1 Inter;color:#6f6479">couverture d'abord</span>
+          </div>
+          <div class="grid3">
+            <div><div class="cv c4"><i>Le Nom du Vent</i></div><div class="meta">Rothfuss · 2009</div></div>
+            <div><div class="cv c2"><i>La Peur du sage</i></div><div class="meta">Rothfuss · 2011</div></div>
+            <div><div class="cv c3"><i>Les Furtifs</i></div><div class="meta">Damasio · 2019</div></div>
+            <div><div class="cv c1"><i>La Route</i></div><div class="meta">McCarthy · 2006</div></div>
+            <div><div class="cv c5"><i>Siddhartha</i></div><div class="meta">Hesse · 1922</div></div>
+            <div><div class="cv c6"><i>Dune</i></div><div class="meta">Herbert · 1965</div></div>
+          </div>
+          <div style="margin:12px 14px 0;border:1px dashed #3A3044;border-radius:8px;padding:8px 9px;font:9px/1.4 Inter;color:#9B94A6">
+            Aucun résultat pour cette image.<br>Essayer : <span style="color:var(--acc)">Le Nom du Vent</span>
+          </div>
+          <div class="tabsb"><div><b>◉</b>Découvrir</div><div class="on"><b>⌕</b>Chercher</div><div><b>≡</b>Journal</div></div>
+        </div>
+      </div>
+
+      <!-- C3 -->
+      <div class="phone c" data-cap="3 · Fiche livre">
+        <div class="stat"><i>9:41</i><i>▮▮▮ ··· <u></u></i></div>
+        <div class="sc">
+          <div class="fiche" style="flex:1;overflow:hidden">
+            <div class="top">
+              <div class="cv c4"><i>Le Nom du Vent</i><u>P. Rothfuss</u></div>
+              <div style="flex:1;display:flex;flex-direction:column">
+                <div style="font:800 13px/1.2 Manrope">Le Nom du Vent</div>
+                <div style="font:9.5px/1.3 Inter;color:#9B94A6;margin-top:2px">Patrick Rothfuss</div>
+                <div style="display:flex;align-items:center;gap:5px;margin-top:7px">
+                  <span class="stars" data-v="4" style="font-size:9px"></span>
+                  <span class="stat2">4,31</span><span style="font:8px/1 Inter;color:#6f6479">1,2 M</span>
+                </div>
+                <div style="margin-top:auto">
+                  <span class="cl" style="font-size:7.5px;padding:3px 6px">Fantasy</span>
+                  <span class="cl" style="font-size:7.5px;padding:3px 6px">662 p.</span>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="eyebrow" style="margin-bottom:6px">Vos stats</div>
+              <div class="kv"><span>Statut</span><b>lu · 12 nov.</b></div>
+              <div class="kv"><span>Votre note</span><b style="color:var(--acc)">4.5 ★</b></div>
+              <div class="kv" style="border:0"><span>Temps de lecture</span><b>9 h 20</b></div>
+            </div>
+            <div class="card" style="border-color:rgba(255,138,101,.3);background:rgba(255,138,101,.06)">
+              <div style="font:8px/1.4 Inter;color:#9B94A6">Pourquoi ce livre ?</div>
+              <div style="font:600 9.5px/1.4 Inter;color:#EDE7DD;margin-top:3px">parce que vous avez aimé <span style="color:var(--acc)">L'Étranger</span> (4,5★) et <span style="color:var(--acc)">Dune</span> (5★)</div>
+            </div>
+            <div style="padding:10px 14px 0">
+              <div class="eyebrow">Avis des lecteurs</div>
+              <p style="font:9.5px/1.5 Inter;color:#B9B0C2;margin:5px 0 0">« Un récit d'apprentissage qui prend son temps, et c'est exactement ce qu'on lui demande. »</p>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:baseline;padding:14px 14px 7px">
+              <span class="eyebrow">Du même auteur</span><span style="font:8px/1 Inter;color:#6f6479">3</span>
+            </div>
+            <div class="grid3">
+              <div><div class="cv c2"><i>La Peur du sage</i></div><div class="meta">2011</div></div>
+              <div><div class="cv c7"><i>Le Nom du Vent</i></div><div class="meta">2009</div></div>
+              <div><div class="cv c6"><i>Les Portes</i></div><div class="meta">à paraître</div></div>
+            </div>
+          </div>
+          <div style="padding:10px 14px 14px;border-top:1px solid var(--rule);display:flex;gap:7px">
+            <div class="btn ghost" style="flex:0 0 44px;font-size:14px">＋</div>
+            <div class="btn acc" style="flex:1">Noter · 4,5 déjà saisi</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- C4 -->
+      <div class="phone c" data-cap="4 · Feuille de notation">
+        <div class="stat"><i>9:41</i><i>▮▮▮ ··· <u></u></i></div>
+        <div class="sc">
+          <div style="position:absolute;inset:0;background:#141118"></div>
+          <div class="sheet" style="position:absolute;left:0;right:0;bottom:0;top:78px;background:var(--surf);
+               border-radius:24px 24px 0 0;padding:12px 14px 14px;display:flex;flex-direction:column;border-top:1px solid var(--rule)">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div>
+                <div class="eyebrow">Noter</div>
+                <div style="font:800 14px/1.2 Manrope;margin-top:3px">Le Nom du Vent</div>
+              </div>
+              <span style="font:700 9px/1 'JetBrains Mono',monospace;color:#6f6479">12 nov.</span>
+            </div>
+            <div style="display:flex;align-items:baseline;gap:8px;margin-top:16px">
+              <div class="num">4.5</div><span style="font:10px/1 Inter;color:#9B94A6">/ 5</span>
+            </div>
+            <div class="segs" style="margin-top:9px;padding:0">
+              <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="half"></i><i></i><i></i><i></i><i></i><i></i>
+            </div>
+            <div style="display:flex;justify-content:space-between;font:7.5px/1 'JetBrains Mono',monospace;color:#6f6479;margin-top:5px">
+              <span>0.5</span><span>2.5</span><span>5.0</span>
+            </div>
+            <div class="eyebrow" style="margin-top:16px">Ce que ça vous a fait</div>
+            <div class="chipline" style="margin-top:6px">
+              <span class="cl on">addictif</span><span class="cl">lent</span><span class="cl on">beau</span><span class="cl">drôle</span><span class="cl">triste</span>
+            </div>
+            <div style="margin-top:12px;background:var(--surf2);border:1px solid var(--rule);border-radius:8px;padding:9px;height:52px;font:10px/1.45 Inter;color:#6f6479">Un mot, une phrase, ou rien du tout.</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;font:9.5px/1 Inter;color:#CFC6D6">
+              <span>Contient un spoiler</span><span class="sw2" style="width:26px;height:15px;border-radius:99px;background:#3A3044;position:relative;display:inline-block"><i style="position:absolute;top:2px;left:2px;width:11px;height:11px;border-radius:50%;background:#8d8497;display:block"></i></span>
+            </div>
+            <div style="display:flex;gap:5px;margin-top:auto">
+              <span class="cl" style="flex:1;text-align:center">Relire</span><span class="cl" style="flex:1;text-align:center">Abandonné</span>
+              <span class="cl on" style="flex:1;text-align:center">Lu</span>
+            </div>
+            <div class="btn acc" style="margin-top:8px">Valider la note</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- C5 -->
+      <div class="phone c" data-cap="5 · Journal">
+        <div class="stat"><i>9:41</i><i>▮▮▮ ··· <u></u></i></div>
+        <div class="sc">
+          <div style="padding:8px 14px 10px;display:flex;justify-content:space-between;align-items:baseline">
+            <div class="h1" style="font-size:17px">2026</div>
+            <span style="font:8.5px/1 'JetBrains Mono',monospace;color:#6f6479">nov.</span>
+          </div>
+          <div class="kpi">
+            <div><b>23</b><span>livres lus</span></div>
+            <div><b>4.1</b><span>note moyenne</span></div>
+            <div><b>9</b><span>séries</span></div>
+          </div>
+          <div class="sync">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            1 note en attente · partira au retour du réseau
+          </div>
+          <div style="padding:8px 14px 0" class="eyebrow">Novembre</div>
+          <div class="tl">
+            <div class="row"><div class="cv c4"><i>N.</i></div><div><div class="t">Le Nom du Vent</div><div class="m">12 nov. · « un livre qu'on referme lentement »</div></div><span class="r">4.5</span></div>
+            <div class="row"><div class="cv c6"><i>L.R.</i></div><div><div class="t">La Route</div><div class="m">8 nov. · 3 jours de lecture</div></div><span class="r">3.0</span></div>
+            <div class="row"><div class="cv c2"><i>S.</i></div><div><div class="t">Siddhartha</div><div class="m">2 nov. · abandonné p. 82</div></div><span class="r" style="color:#9B94A6">DNF</span></div>
+            <div class="row"><div class="cv c5"><i>D.</i></div><div><div class="t">Dune</div><div class="m">relu · 28 oct.</div></div><span class="r">5.0</span></div>
+          </div>
+          <div class="tabsb"><div><b>◉</b>Découvrir</div><div><b>⌕</b>Chercher</div><div class="on"><b>≡</b>Journal</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<script>
+(function(){
+  // étoiles : <span class="stars" data-v="4.5"> remplit 5 étoiles, la demi-étoile est gérée en CSS
+  document.querySelectorAll('.stars[data-v]').forEach(function(el){
+    var v = parseFloat(el.dataset.v), html = '';
+    for (var i = 1; i <= 5; i++) {
+      var f = v >= i ? '1' : (v >= i - 0.5 ? '.5' : '0');
+      html += '<span class="s" data-f="'+f+'"><span>★</span><b>★</b></span>';
+    }
+    el.innerHTML = html;
+  });
+
+  var tabs = document.querySelectorAll('.nav button');
+  tabs.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      tabs.forEach(function(b){ b.removeAttribute('aria-selected'); });
+      btn.setAttribute('aria-selected','true');
+      document.querySelectorAll('.dir').forEach(function(s){ s.classList.remove('on'); });
+      document.getElementById(btn.dataset.target).classList.add('on');
+    });
+  });
+
+  document.querySelectorAll('[data-scroll]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var rail = btn.closest('.railwrap').querySelector('.rail');
+      rail.scrollBy({ left: parseInt(btn.dataset.scroll, 10) * 320, behavior: 'smooth' });
+    });
+  });
+})();
+</script>
+</body>
+</html>

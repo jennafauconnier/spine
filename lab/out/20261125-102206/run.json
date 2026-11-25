@@ -1,0 +1,73 @@
+{
+ "request": "Refonte de la notation et de la découverte de livres dans Goodreads",
+ "budget": 1.0,
+ "total_cost": 0.089221,
+ "seconds": 68,
+ "calls": [
+  {
+   "role": "PM",
+   "model": "deepseek/deepseek-v4.1-flash",
+   "in": 556,
+   "out": 488,
+   "cost": 0.000752,
+   "seconds": 2
+  },
+  {
+   "role": "PO",
+   "model": "deepseek/deepseek-v4.1-flash",
+   "in": 663,
+   "out": 1185,
+   "cost": 0.001621,
+   "seconds": 4
+  },
+  {
+   "role": "DESIGN_B",
+   "model": "z-ai/glm-5.2",
+   "in": 2478,
+   "out": 2827,
+   "cost": 0.023862,
+   "seconds": 11
+  },
+  {
+   "role": "DESIGN_C",
+   "model": "z-ai/glm-5.2",
+   "in": 2479,
+   "out": 2058,
+   "cost": 0.018789,
+   "seconds": 13
+  },
+  {
+   "role": "DESIGN_A",
+   "model": "z-ai/glm-5.2",
+   "in": 2473,
+   "out": 2333,
+   "cost": 0.020591,
+   "seconds": 14
+  },
+  {
+   "role": "TECH_LEAD",
+   "model": "tencent/hy4",
+   "in": 1919,
+   "out": 3753,
+   "cost": 0.010987,
+   "seconds": 40
+  },
+  {
+   "role": "CRITIQUE",
+   "model": "tencent/hy4",
+   "in": 8959,
+   "out": 2058,
+   "cost": 0.012619,
+   "seconds": 22
+  }
+ ],
+ "deliverables": [
+  "01-PM.md",
+  "02-PO.md",
+  "03-DESIGN_B.md",
+  "04-DESIGN_C.md",
+  "05-DESIGN_A.md",
+  "06-TECH_LEAD.md",
+  "07-CRITIQUE.md"
+ ]
+}

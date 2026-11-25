@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Spine — deux identités, loin de Goodreads</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo+Narrow:wght@400;500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--page:#08080A;--ink:#F1EFE9;--dim:#7E7E85;--line:#232326;--acid:#E4FF3A}
+*{box-sizing:border-box;-webkit-font-smoothing:antialiased}
+html,body{margin:0}
+body{background:var(--page);color:var(--ink);font:14px/1.5 Inter,system-ui,sans-serif}
+.top{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  padding:14px 24px;background:rgba(8,8,10,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.brand{font:600 15px/1 Inter}
+.brand span{color:var(--dim);font-weight:400;margin-left:8px}
+.nav{display:flex;gap:6px;margin-left:auto}
+.nav button{appearance:none;border:1px solid var(--line);background:transparent;color:var(--dim);
+  font:500 12px/1 Inter;padding:9px 13px;border-radius:999px;cursor:pointer}
+.nav button:hover{color:var(--ink)}
+.nav button[aria-selected="true"]{background:var(--ink);color:#111;border-color:var(--ink)}
+.note{width:100%;font-size:11px;color:var(--dim)}
+.note b{color:#C9C5BC;font-weight:500}
+
+.dir{display:none;grid-template-columns:290px minmax(0,1fr);gap:28px;padding:26px 24px 40px}
+.dir.on{display:grid}
+@media (max-width:860px){.dir.on{grid-template-columns:1fr}}
+.meta .kicker{font:600 10px/1 Inter;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin-bottom:10px}
+.meta h2{font-size:26px;margin:0 0 8px;letter-spacing:-.02em}
+.meta p{color:#B7B3AB;font-size:12.5px;margin:0 0 14px}
+.tagline{display:inline-block;border:1px solid #34343A;border-radius:999px;padding:6px 10px;
+  font:600 10.5px/1 Inter;letter-spacing:.05em;margin-bottom:16px;color:#CFCABF}
+.pts{list-style:none;padding:0;margin:0 0 18px}
+.pts li{position:relative;padding-left:14px;font-size:12px;color:#B7B3AB;margin-bottom:7px}
+.pts li::before{content:"";position:absolute;left:0;top:6px;width:4px;height:4px;border-radius:50%;background:currentColor;opacity:.55}
+.sw{display:flex;gap:6px;margin-bottom:8px}
+.sw i{width:26px;height:26px;border-radius:4px;display:block;border:1px solid rgba(255,255,255,.12)}
+.tok{font:11px/1.75 'JetBrains Mono',monospace;color:#8C8880}
+.railwrap{min-width:0;position:relative}
+.railtop{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.railtop em{font-style:normal;font:11px/1 Inter;color:var(--dim)}
+.railbtn{margin-left:auto;display:flex;gap:6px}
+.railbtn button{width:30px;height:30px;border-radius:50%;border:1px solid var(--line);background:#131315;
+  color:#C9C5BC;cursor:pointer;font-size:13px;line-height:1}
+.rail{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;padding:2px 2px 14px}
+.rail::-webkit-scrollbar{height:7px}
+.rail::-webkit-scrollbar-thumb{background:#2B2B2E;border-radius:8px}
+
+.phone{flex:0 0 300px;width:300px;height:650px;scroll-snap-align:start;background:var(--bg);
+  border:7px solid #131316;border-radius:34px;overflow:hidden;position:relative;
+  box-shadow:0 22px 44px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.05);color:var(--fg)}
+.phone::after{content:attr(data-cap);position:absolute;top:0;left:0;z-index:9;padding:5px 9px 4px;
+  border-radius:0 0 7px 0;font:600 7.5px/1 Inter;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--fg);background:var(--chip);opacity:.95}
+.stat{height:22px;display:flex;align-items:center;justify-content:space-between;padding:0 16px 0 74px;
+  font:600 8.5px/1 Inter;color:var(--fg);opacity:.55}
+.sc{height:calc(100% - 22px);display:flex;flex-direction:column;overflow:hidden;position:relative}
+
+/* ---------- D · TRANCHE ---------- */
+.d{--bg:#0F1011;--fg:#F2F0EA;--fg2:#8A8A8E;--acid:#D8FF3E;--chip:rgba(15,16,17,.85);font-family:Inter}
+.d .mark{font:700 11px/1 'JetBrains Mono',monospace;letter-spacing:.34em}
+.d .micro{font:7.5px/1.4 'JetBrains Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--fg2)}
+.d .dhead{display:flex;justify-content:space-between;align-items:baseline;padding:6px 14px 12px}
+.d .shelf{display:flex;align-items:flex-end;gap:3px;padding:0 12px 0;height:152px;
+  border-bottom:1px solid #26262A;margin-bottom:11px;position:relative}
+.d .sp{background:var(--c);writing-mode:vertical-rl;transform:rotate(180deg);display:flex;align-items:center;justify-content:space-between;
+  padding:7px 3px;border-radius:1px;flex:0 0 auto}
+.d .sp b{font:700 10px/1 'Archivo Narrow',sans-serif;text-transform:uppercase;letter-spacing:.01em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-height:100%}
+.d .sp i{font:7px/1 'JetBrains Mono',monospace;opacity:.72;font-style:normal;letter-spacing:.04em}
+.d .pull{flex:0 0 auto;position:relative;transform:translateY(-9px);display:flex;flex-direction:column;
+  justify-content:flex-end;padding:8px;border-radius:2px;box-shadow:0 14px 26px rgba(0,0,0,.6);width:112px;height:150px}
+.d .pull b{font:700 12px/1.05 'Archivo Narrow',sans-serif;text-transform:uppercase}
+.d .pull i{font:7px/1.3 'JetBrains Mono',monospace;font-style:normal;opacity:.8;margin-top:3px}
+.d .pull::after{content:"EN COURS";position:absolute;top:-9px;left:0;background:var(--acid);color:#111;
+  font:700 6.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;padding:3px 5px}
+.d .bar{display:flex;justify-content:space-between;align-items:center;padding:10px 14px 0}
+.d .pill{flex:1;display:flex;align-items:center;gap:7px;height:34px;border:1px solid #2C2C31;border-radius:2px;
+  padding:0 9px;font:8.5px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:var(--fg2);text-transform:uppercase}
+.d .tabs{display:flex;justify-content:space-between;padding:10px 16px 14px;margin-top:auto}
+.d .tabs span{font:700 7.5px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#55555B;text-transform:uppercase}
+.d .tabs span.on{color:var(--fg)}
+.d .ratebox{flex:1;display:flex;gap:22px;padding:16px 20px 0;align-items:flex-start}
+.d .vbar{position:relative;width:56px;height:250px;border:1px solid #2E2E33;border-radius:2px;background:#17181A;flex:0 0 auto}
+.d .vbar .fill{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(0deg,#FF4A1C,#FFA23D)}
+.d .vbar .tk{position:absolute;left:0;right:0;height:1px;background:rgba(255,255,255,.13)}
+.d .vbar .tk b{display:none}
+.d .num{font:700 62px/0.85 'Archivo Black',sans-serif;letter-spacing:-.04em}
+.d .uplabel{display:inline-flex;align-items:center;gap:6px;margin-top:6px;font:700 8px/1 'JetBrains Mono',monospace;
+  letter-spacing:.14em;color:var(--acid);text-transform:uppercase}
+.d .quick{display:flex;flex-wrap:wrap;gap:5px;margin-top:12px}
+.d .chip{font:7.5px/1 'JetBrains Mono',monospace;letter-spacing:.08em;text-transform:uppercase;
+  border:1px solid #33333A;padding:6px 7px;color:#B9B5AC;border-radius:2px}
+.d .chip.on{background:var(--fg);color:#111;border-color:var(--fg)}
+.d .go{margin-top:auto;display:flex;gap:0}
+.d .go div{flex:1;height:48px;display:flex;align-items:center;justify-content:center;
+  font:700 9px/1 'JetBrains Mono',monospace;letter-spacing:.18em;text-transform:uppercase}
+.d .go .primary{background:var(--acid);color:#111}
+.d .go .ghost{border:1px solid #33333A;color:#B9B5AC}
+.d .row{display:flex;align-items:baseline;gap:10px;padding:11px 14px;border-bottom:1px solid #222226}
+.d .row .idx{font:700 8px/1 'JetBrains Mono',monospace;color:#5A5A60;width:16px}
+.d .row .ti{font:700 12.5px/1.1 'Archivo Narrow',sans-serif;text-transform:uppercase;letter-spacing:.01em}
+.d .row .au{font:8px/1.3 'JetBrains Mono',monospace;color:#7E7E85;margin-top:3px;letter-spacing:.04em}
+.d .row .st{margin-left:auto;text-align:right}
+.d .row .st b{display:block;font:700 12px/1 'JetBrains Mono',monospace}
+.d .row .st span{font:6.5px/1 'JetBrains Mono',monospace;letter-spacing:.12em;color:#5A5A60}
+.d .sq{width:8px;height:8px;background:var(--acid);display:inline-block;margin-right:4px;vertical-align:-1px}
+.d .scan{border:1px solid #33333A;font:700 7.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;padding:8px 9px;color:#B9B5AC}
+
+/* ---------- E · AFFICHE ---------- */
+.e{--bg:#0B0B0B;--fg:#F4F1E8;--acid:#E4FF3A;--chip:rgba(11,11,11,.9);font-family:'Space Grotesk',Inter,sans-serif}
+.e .ticker{background:var(--acid);color:#0B0B0B;font:700 7px/1 'JetBrains Mono',monospace;letter-spacing:.2em;
+  text-transform:uppercase;padding:5px 0;white-space:nowrap;overflow:hidden}
+.e .ticker span{display:inline-block;padding-left:8px}
+.e .hero{position:absolute;inset:0}
+.e .hero .art{position:absolute;inset:0}
+.e .hero .veil{position:absolute;inset:0;background:linear-gradient(0deg,rgba(11,11,11,.96) 4%,rgba(11,11,11,.1) 48%,rgba(11,11,11,.55) 100%)}
+.e .hero .txt{position:absolute;left:14px;right:14px;bottom:42px}
+.e .huge{font:700 36px/0.92 'Space Grotesk',sans-serif;letter-spacing:-.035em;text-transform:uppercase}
+.e .sub{font:400 9px/1.4 'JetBrains Mono',monospace;letter-spacing:.16em;text-transform:uppercase;color:#C9C5BA;margin-top:7px}
+.e .code{font:700 8px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:var(--acid)}
+.e .bars{display:flex;gap:2px;margin-top:9px;align-items:flex-end;height:16px}
+.e .bars i{width:7px;height:16px;background:#3A3A38;display:block}
+.e .bars i.f{background:var(--acid)}
+.e .bars i.h{background:linear-gradient(90deg,var(--acid) 50%,#3A3A38 50%)}
+.e .foot{position:absolute;left:14px;right:14px;bottom:14px;display:flex;justify-content:space-between;align-items:flex-end}
+.e .num10{font:700 9px/1 'JetBrains Mono',monospace;letter-spacing:.2em;color:#8B8B85}
+.e .fsheet{position:absolute;left:0;right:0;bottom:0;top:88px;background:#141414;border-top:2px solid var(--acid);
+  padding:16px 16px 0;display:flex;flex-direction:column}
+.e .big{font:700 80px/.82 'Space Grotesk',sans-serif;letter-spacing:-.06em;line-height:.82}
+.e .big small{font-size:22px;letter-spacing:0;opacity:.45;margin-left:4px}
+.e .scale{display:flex;gap:3px;margin-top:14px}
+.e .scale i{flex:1;height:42px;background:#242424;display:block}
+.e .scale i.f{background:var(--acid)}
+.e .scale i.h{background:linear-gradient(90deg,var(--acid) 50%,#242424 50%)}
+.e .scale i.sel{outline:1px solid #fff;outline-offset:2px}
+.e .inputline{margin-top:14px;border-bottom:1px solid #383838;padding-bottom:7px;font:9px/1.4 'JetBrains Mono',monospace;
+  letter-spacing:.1em;text-transform:uppercase;color:#6E6E68}
+.e .toggles{display:flex;gap:14px;margin-top:12px;font:700 7px/1 'JetBrains Mono',monospace;letter-spacing:.14em;
+  text-transform:uppercase;color:#8B8B85}
+.e .toggles b{display:inline-block;width:9px;height:9px;border:1px solid #6E6E68;margin-right:5px;vertical-align:-1px}
+.e .toggles b.on{background:var(--acid);border-color:var(--acid)}
+.e .validate{margin-top:auto;margin-left:-16px;margin-right:-16px;height:54px;background:var(--acid);color:#0B0B0B;
+  display:flex;align-items:center;justify-content:center;font:700 11px/1 'Space Grotesk',sans-serif;letter-spacing:.22em;text-transform:uppercase}
+.e.alt{--fg:#0B0B0B}
+.e .acidbg{position:absolute;inset:0;background:var(--acid)}
+.e .searchline{position:relative;margin:0 14px;border-bottom:2px solid #0B0B0B;padding:8px 0 9px;
+  font:700 15px/1.1 'Space Grotesk',sans-serif;text-transform:uppercase;letter-spacing:-.02em;color:#0B0B0B}
+.e .searchline small{display:block;font:700 7px/1 'JetBrains Mono',monospace;letter-spacing:.2em;margin-bottom:5px;opacity:.55}
+.e .res{position:relative;padding:0 14px}
+.e .res .r{display:flex;align-items:center;gap:9px;border-bottom:2px solid #0B0B0B;padding:8px 0}
+.e .res .r .no{font:700 9px/1 'JetBrains Mono',monospace;opacity:.5;width:18px}
+.e .res .r .art2{width:26px;height:38px;background:#0B0B0B;flex:0 0 auto;display:flex;align-items:center;justify-content:center}
+.e .res .r .ti{font:700 11px/1.05 'Space Grotesk',sans-serif;text-transform:uppercase;letter-spacing:-.01em}
+.e .res .r .au{font:7px/1.3 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;opacity:.6;margin-top:3px}
+.e .res .r .mk{margin-left:auto;font:700 8px/1 'JetBrains Mono',monospace;letter-spacing:.08em}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="brand">Spine<span>deux identités qui ne ressemblent ni à Goodreads, ni aux trois précédentes</span></div>
+  <div class="nav" role="tablist">
+    <button role="tab" data-target="d" aria-selected="true">D · Tranche</button>
+    <button role="tab" data-target="e">E · Affiche</button>
+  </div>
+  <div class="note">Les maquettes v1 (Pellicule / Les Pages / Sillage) restent dans <code>v1-trois-directions.html</code>. Ici : 3 écrans par piste, juste assez pour juger l'identité et le geste de notation.</div>
+</div>
+
+<!-- ============ D · TRANCHE ============ -->
+<section class="dir d on" id="d">
+  <div class="meta">
+    <div class="kicker">Piste D</div>
+    <h2>« Tranche »</h2>
+    <p>L'étagère vue de face. Les livres ne sont plus des vignettes de couverture : ce sont des tranches colorées, debout, qu'on tire vers soi. Le nom du produit devient le principe de l'interface.</p>
+    <div class="tagline">Aucune grille de couvertures · aucune étoile</div>
+    <ul class="pts">
+      <li><b>Découverte</b> : un mur d'étagères, 3 rangées, tranches de couleurs et d'épaisseurs réelles. Le livre en cours est sorti de l'étagère.</li>
+      <li><b>Notation</b> : on tire une barre verticale vers le haut, la tranche se remplit. 4,5 = 90 % de hauteur. Pas d'étoiles.</li>
+      <li><b>Recherche</b> : une liste typographique numérotée, pas une grille — le contraire de Goodreads.</li>
+    </ul>
+    <div class="sw"><i style="background:#0F1011"></i><i style="background:#FF4A1C"></i><i style="background:#2B4CFF"></i><i style="background:#D8FF3E"></i><i style="background:#C6A8FF"></i><i style="background:#F3EDE0"></i></div>
+    <div class="tok">Archivo Narrow 700 + JetBrains Mono<br>mur #0F1011 · accent acide #D8FF3E<br>6 couleurs de tranche, 0 image<br>geste : glisser verticalement</div>
+  </div>
+  <div class="railwrap">
+    <div class="railtop"><em>3 écrans</em><div class="railbtn"><button data-scroll="-1" aria-label="Précédent">‹</button><button data-scroll="1" aria-label="Suivant">›</button></div></div>
+    <div class="rail">
+
+      <!-- D1 -->
+      <div class="phone d" data-cap="1 · Le mur">
+        <div class="stat"><i>9:41</i><i>▮▮▮ ··· ▮</i></div>
+        <div class="sc">
+          <div class="dhead"><span class="mark">SPINE</span><span class="micro">142 · 12 EN COURS</span></div>
+
+          <div class="shelf">
+            <div class="sp" style="--c:#FF4A1C;width:26px;height:118px;color:#120605"><b>Dune</b><i>Herbert</i></div>
+            <div class="sp" style="--c:#2B4CFF;width:34px;height:142px;color:#fff"><b>Les Furtifs</b><i>Damasio</i></div>
+            <div class="sp" style="--c:#F3EDE0;width:22px;height:104px;color:#151515"><b>Siddhartha</b><i>Hesse</i></div>
+            <div class="sp" style="--c:#C6A8FF;width:30px;height:130px;color:#181022"><b>La Horde du Contrevent</b><i>Damasio</i></div>
+            <div class="sp" style="--c:#D8FF3E;width:24px;height:112px;color:#12140A"><b>L'Étranger</b><i>Camus</i></div>
+            <div class="sp" style="--c:#5B5B62;width:38px;height:150px;color:#F3EDE0"><b>Le Nom du Vent</b><i>Rothfuss</i></div>
+            <div class="sp" style="--c:#FF9E2C;width:28px;height:124px;color:#221204"><b>La Route</b><i>McCarthy</i></div>
+            <div class="sp" style="--c:#2B4CFF;width:20px;height:96px;color:#fff"><b>S.</b><i>Abel</i></div>
+          </div>
+
+          <div class="shelf" style="height:160px">
+            <div class="sp" style="--c:#C6A8FF;width:24px;height:112px;color:#181022"><b>Kafka sur le rivage</b><i>Murakami</i></div>
+            <div class="pull" style="background:linear-gradient(150deg,#2B4CFF,#0E1A6B 78%);color:#fff">
+              <b>Le Nom<br>du Vent</b><i>Rothfuss · p.142</i>
+            </div>
+            <div class="sp" style="--c:#F3EDE0;width:30px;height:138px;color:#151515"><b>La Horde</b><i>Damasio</i></div>
+            <div class="sp" style="--c:#FF4A1C;width:22px;height:100px;color:#120605"><b>L'Étranger</b><i>Camus</i></div>
+            <div class="sp" style="--c:#5B5B62;width:26px;height:120px;color:#F3EDE0"><b>Dune</b><i>Herbert</i></div>
+            <div class="sp" style="--c:#D8FF3E;width:34px;height:146px;color:#12140A"><b>La Route</b><i>McCarthy</i></div>
+          </div>
+
+          <div class="shelf">
+            <div class="sp" style="--c:#FF9E2C;width:30px;height:126px;color:#221204"><b>Le Mythe de Sisyphe</b><i>Camus</i></div>
+            <div class="sp" style="--c:#2B4CFF;width:22px;height:104px;color:#fff"><b>Kafka</b><i>Murakami</i></div>
+            <div class="sp" style="--c:#F3EDE0;width:36px;height:144px;color:#151515"><b>Les Furtifs</b><i>Damasio</i></div>
+            <div class="sp" style="--c:#C6A8FF;width:24px;height:110px;color:#181022"><b>Siddhartha</b><i>Hesse</i></div>
+            <div class="sp" style="--c:#5B5B62;width:28px;height:132px;color:#F3EDE0"><b>Dune</b><i>Herbert</i></div>
+            <div class="sp" style="--c:#FF4A1C;width:32px;height:138px;color:#120605"><b>Le Nom du Vent</b><i>Rothfuss</i></div>
+            <div class="sp" style="--c:#D8FF3E;width:20px;height:92px;color:#12140A"><b>S.</b><i>Abel</i></div>
+          </div>
+
+          <div class="bar"><div class="pill">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+            chercher un titre, un auteur
+          </div></div>
+          <div class="tabs"><span class="on">Le mur</span><span>Chercher</span><span>Journal</span></div>
+        </div>
+      </div>
+
+      <!-- D2 -->
+      <div class="phone d" data-cap="2 · Noter">
+        <div class="stat"><i>9:41</i><i>▮▮▮ ··· ▮</i></div>
+        <div class="sc">
+          <div class="dhead"><span class="micro">Noter</span><span class="micro">12 nov. 2024</span></div>
+          <div style="padding:0 14px"><div style="font:700 20px/1.05 'Archivo Narrow',sans-serif;text-transform:uppercase">Le Nom du Vent</div>
+            <div class="micro" style="margin-top:5px">Rothfuss · 662 p.</div></div>
+          <div class="ratebox">
+            <div class="vbar">
+              <div class="fill" style="height:90%"></div>
+              <div class="tk" style="bottom:10%"><b>0.5</b></div>
+              <div class="tk" style="bottom:30%"><b>1.5</b></div>
+              <div class="tk" style="bottom:50%"><b>2.5</b></div>
+              <div class="tk" style="bottom:70%"><b>3.5</b></div>
+              <div class="tk" style="bottom:90%"><b>4.5</b></div>
+            </div>
+            <div>
+              <div class="num">4.5</div>
+              <div class="micro" style="margin-top:6px">sur 5</div>
+              <div class="uplabel">↑ tirez la tranche</div>
+              <div class="quick">
+                <span class="chip on">lu</span><span class="chip">relire</span><span class="chip">abandonné</span>
+                <span class="chip">spoiler</span><span class="chip">privé</span>
+              </div>
+            </div>
+          </div>
+          <div style="padding:14px 20px 0">
+            <div style="border:1px dashed #33333A;padding:9px;font:8px/1.4 'JetBrains Mono',monospace;
+                 letter-spacing:.1em;text-transform:uppercase;color:#6C6C72">une phrase, ou rien</div>
+            <div style="display:flex;justify-content:space-between;margin-top:12px;font:7px/1.6 'JetBrains Mono',monospace;
+                 letter-spacing:.12em;text-transform:uppercase;color:#5A5A60">
+              <span>lu le 12 nov. · 18:42</span><span style="color:#D8FF3E">hors ligne → en attente</span>
+            </div>
+          </div>
+          <div class="go"><div class="ghost">plus tard</div><div class="primary">garder</div></div>
+        </div>
+      </div>
+
+      <!-- D3 -->
+      <div class="phone d" data-cap="3 · Chercher">
+        <div class="stat"><i>9:41</i><i>▮▮▮ ··· ▮</i></div>
+        <div class="sc">
+          <div class="dhead"><span class="mark">SPINE</span><span class="scan">SCAN ISBN</span></div>
+          <div style="padding:0 14px 12px">
+            <div style="border-bottom:2px solid #F2F0EA;padding-bottom:8px;font:700 15px/1 'Archivo Narrow',sans-serif;text-transform:uppercase;letter-spacing:.01em">le nom du vent<span style="color:#D8FF3E">_</span></div>
+            <div class="micro" style="margin-top:7px">6 résultats · livre dédoublonné</div>
+          </div>
+          <div class="row"><span class="idx">01</span><div><div class="ti">Le Nom du Vent</div><div class="au">Rothfuss · 2009 · 662 p.</div></div>
+            <div class="st"><b>4.5</b><span>VOUS</span></div></div>
+          <div class="row"><span class="idx">02</span><div><div class="ti">La Peur du Sage</div><div class="au">Rothfuss · 2011 · 1 008 p.</div></div>
+            <div class="st"><b>—</b><span>NON LU</span></div></div>
+          <div class="row"><span class="idx">03</span><div><div class="ti">Les Furtifs</div><div class="au">Damasio · 2019 · 720 p.</div></div>
+            <div class="st"><b>3.5</b><span>VOUS</span></div></div>
+          <div class="row"><span class="idx">04</span><div><div class="ti">La Route</div><div class="au">McCarthy · 2006 · 232 p.</div></div>
+            <div class="st"><b>4.0</b><span>VOUS</span></div></div>
+          <div class="row"><span class="idx">05</span><div><div class="ti">Siddhartha</div><div class="au">Hesse · 1922 · 152 p.</div></div>
+            <div class="st"><b>—</b><span>NON LU</span></div></div>
+          <div style="padding:12px 14px 0" class="micro"><span class="sq"></span>les livres que vous avez déjà notés sont marqués</div>
+          <div class="go"><div class="primary">+ ajouter à l'étagère</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ E · AFFICHE ============ -->
+<section class="dir e" id="e">
+  <div class="meta">
+    <div class="kicker">Piste E</div>
+    <h2>« Affiche »</h2>
+    <p>Un livre par écran, plein cadre, comme une affiche de film. Typographie large, aplats, ticker. On avance au swipe, on note avec une échelle de 10 barres — pas d'étoiles.</p>
+    <div class="tagline">Écran unique · couverture plein cadre</div>
+    <ul class="pts">
+      <li><b>Découverte</b> : une couverture à la fois, titre en capitales par-dessus, bandeau acide en haut.</li>
+      <li><b>Notation</b> : le chiffre fait 80 px, l'échelle est faite de 10 barres de 42 px qu'on tape au pouce.</li>
+      <li><b>Recherche</b> : fond acide, texte noir, lignes séparées par des filets épais — l'inverse exact de la fiche Goodreads.</li>
+    </ul>
+    <div class="sw"><i style="background:#0B0B0B"></i><i style="background:#E4FF3A"></i><i style="background:#F4F1E8"></i></div>
+    <div class="tok">Space Grotesk 700 + JetBrains Mono<br>noir #0B0B0B · acide #E4FF3A (15,9:1)<br>échelle 10 × 0,5 · pas de grille<br>geste : swipe vertical</div>
+  </div>
+  <div class="railwrap">
+    <div class="railtop"><em>3 écrans</em><div class="railbtn"><button data-scroll="-1" aria-label="Précédent">‹</button><button data-scroll="1" aria-label="Suivant">›</button></div></div>
+    <div class="rail">
+
+      <!-- E1 -->
+      <div class="phone e" data-cap="1 · Découvrir">
+        <div class="stat"><i>9:41</i><i>▮▮▮ ··· ▮</i></div>
+        <div class="sc">
+          <div class="ticker"><span>NOUVEAU · LES FURTIFS · DAMASIO · 720 PAGES · ★ 4.2 · SUIVI PAR 3 AMIS · NOUVEAU · SIDDHARTHA ·</span></div>
+          <div class="hero">
+            <div class="art" style="background:linear-gradient(160deg,#2B4CFF 0%,#101A63 55%,#07091F 100%)"></div>
+            <div class="art" style="background:radial-gradient(circle at 68% 32%,rgba(228,255,58,.22),transparent 46%)"></div>
+            <div class="veil"></div>
+            <div class="txt">
+              <div class="code">POUR VOUS · PARCE QUE DUNE 5.0</div>
+              <div class="huge" style="margin-top:6px">Le Nom<br>du Vent</div>
+              <div class="sub">Patrick Rothfuss · 2009 · 662 p.</div>
+              <div class="bars">
+                <i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="h"></i><i></i>
+              </div>
+            </div>
+          </div>
+          <div class="foot"><span class="num10">02 / 12</span><span class="num10">SWIPE ↑</span></div>
+        </div>
+      </div>
+
+      <!-- E2 -->
+      <div class="phone e" data-cap="2 · Noter">
+        <div class="stat"><i>9:41</i><i>▮▮▮ ··· ▮</i></div>
+        <div class="sc">
+          <div class="ticker"><span>NOTEZ CE LIVRE · 12 NOV. 2024 · 18:42 · NOTEZ CE LIVRE · 12 NOV. 2024 · 18:42 ·</span></div>
+          <div class="fsheet">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start">
+              <div>
+                <div class="code" style="color:#8B8B85">LE NOM DU VENT</div>
+                <div class="big" style="margin-top:10px">4.5<small>/5</small></div>
+              </div>
+              <div style="font:700 20px/1 'Space Grotesk';color:#3A3A38">✕</div>
+            </div>
+            <div class="scale">
+              <i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="h sel"></i><i></i>
+            </div>
+            <div class="inputline">une phrase ? (optionnel)</div>
+            <div class="toggles"><span><b class="on"></b>SPOILER</span><span><b></b>PRIVÉ</span><span><b class="on"></b>LU</span></div>
+            <div style="display:flex;gap:10px;align-items:flex-end;margin-top:22px">
+              <div style="width:52px;height:78px;background:linear-gradient(150deg,#2B4CFF,#0E1A6B);flex:0 0 auto"></div>
+              <div style="font:7px/1.7 'JetBrains Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:#6E6E68">
+                LU LE 12 NOV. 2024<br>MODIFIABLE · 1<sup>re</sup> LECTURE<br>SYNCHRO 18:42:07
+              </div>
+            </div>
+            <div style="display:flex;gap:6px;margin-top:18px">
+              <span style="font:7px/1 'JetBrains Mono',monospace;letter-spacing:.14em;border:1px solid #3A3A38;padding:6px 7px;color:#8B8B85">RELIRE</span>
+              <span style="font:7px/1 'JetBrains Mono',monospace;letter-spacing:.14em;border:1px solid #3A3A38;padding:6px 7px;color:#8B8B85">ABANDONNER</span>
+              <span style="font:7px/1 'JetBrains Mono',monospace;letter-spacing:.14em;border:1px solid #3A3A38;padding:6px 7px;color:#8B8B85">AUTRE DATE</span>
+            </div>
+            <div style="font:7px/1.6 'JetBrains Mono',monospace;letter-spacing:.1em;color:#4E4E4A;margin-top:10px">
+              HORS LIGNE : LA NOTE PARTIRA AU RETOUR DU RÉSEAU
+            </div>
+            <div class="validate">VALIDER</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- E3 -->
+      <div class="phone e alt" data-cap="3 · Chercher">
+        <div class="stat"><i>9:41</i><i>▮▮▮ ··· ▮</i></div>
+        <div class="sc">
+          <div class="acidbg"></div>
+          <div style="position:relative;display:flex;justify-content:space-between;align-items:center;padding:8px 14px 14px">
+            <span style="font:700 11px/1 'Space Grotesk';letter-spacing:.24em">SPINE</span>
+            <span style="font:700 8px/1 'JetBrains Mono';letter-spacing:.14em;border:2px solid #0B0B0B;padding:6px 8px">SCAN</span>
+          </div>
+          <div class="searchline"><small>TITRE, AUTEUR, ISBN</small>le nom du vent</div>
+          <div style="position:relative;display:flex;justify-content:space-between;padding:10px 14px 4px">
+            <span style="font:700 8px/1 'JetBrains Mono';letter-spacing:.18em">5 RÉSULTATS</span>
+            <span style="font:700 8px/1 'JetBrains Mono';letter-spacing:.18em;opacity:.5">TRI : PERTINENCE</span>
+          </div>
+          <div class="res">
+            <div class="r"><span class="no">01</span><div class="art2"></div>
+              <div><div class="ti">Le Nom du Vent</div><div class="au">Rothfuss · 2009</div></div><span class="mk">4.5 ★</span></div>
+            <div class="r"><span class="no">02</span><div class="art2"></div>
+              <div><div class="ti">La Peur du Sage</div><div class="au">Rothfuss · 2011</div></div><span class="mk">—</span></div>
+            <div class="r"><span class="no">03</span><div class="art2"></div>
+              <div><div class="ti">Les Furtifs</div><div class="au">Damasio · 2019</div></div><span class="mk">3.5 ★</span></div>
+            <div class="r"><span class="no">04</span><div class="art2"></div>
+              <div><div class="ti">La Route</div><div class="au">McCarthy · 2006</div></div><span class="mk">4.0 ★</span></div>
+            <div class="r"><span class="no">05</span><div class="art2"></div>
+              <div><div class="ti">Siddhartha</div><div class="au">Hesse · 1922</div></div><span class="mk">—</span></div>
+            <div class="r"><span class="no">06</span><div class="art2"></div>
+              <div><div class="ti">Le Mythe de Sisyphe</div><div class="au">Camus · 1942</div></div><span class="mk">5.0 ★</span></div>
+            <div class="r" style="border-bottom:0"><span class="no">07</span><div class="art2"></div>
+              <div><div class="ti">Kafka sur le rivage</div><div class="au">Murakami · 2002</div></div><span class="mk">—</span></div>
+          </div>
+          <div style="position:relative;margin-top:auto;background:#0B0B0B;color:#E4FF3A;padding:12px 14px;
+               display:flex;justify-content:space-between;font:700 8px/1 'JetBrains Mono';letter-spacing:.18em">
+            <span>PAS TROUVÉ ? SCANNEZ LE CODE-BARRES</span><span>→</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<script>
+(function(){
+  var tabs = document.querySelectorAll('.nav button');
+  tabs.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      tabs.forEach(function(b){ b.removeAttribute('aria-selected'); });
+      btn.setAttribute('aria-selected','true');
+      document.querySelectorAll('.dir').forEach(function(s){ s.classList.remove('on'); });
+      document.getElementById(btn.dataset.target).classList.add('on');
+    });
+  });
+  document.querySelectorAll('[data-scroll]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      btn.closest('.railwrap').querySelector('.rail').scrollBy({left: parseInt(btn.dataset.scroll,10)*320, behavior:'smooth'});
+    });
+  });
+})();
+</script>
+</body>
+</html>
